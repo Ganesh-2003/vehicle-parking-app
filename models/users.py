@@ -1,6 +1,6 @@
 import sqlite3
 import os
-from dotenv import load_dotenv 
+import bcrypt
 
 def create_user_table():
     connection = sqlite3.connect("users.db")
@@ -28,18 +28,21 @@ def check_user(email):
     res = cur.execute(
         '''
             SELECT EMAIL FROM USERS where EMAIL=?
-        ''', (email)
+        ''', (email,)
     )
 
+    user = res.fetchone()
     connection.commit()
     connection.close()
-
-    if(res):
+    if user:
         return True
     else:
         return False
+
+   
     
 def register_user(email, hashedpassword, fullname, address, pincode):
+
 
     connection = sqlite3.connect("users.db")
     cur = connection.cursor()
@@ -51,4 +54,22 @@ def register_user(email, hashedpassword, fullname, address, pincode):
 
     connection.commit()
     connection.close()
-    
+
+def fetch_user(email,password):
+
+    connection = sqlite3.connect("users.db")
+    cur = connection.cursor()
+    cur.execute(
+        '''
+            SELECT * FROM USERS WHERE EMAIL = ?
+        ''',(email,)        
+    )
+
+    user = cur.fetchone()
+    if user:
+        hashed_password = user[2]
+        pass_correct = bcrypt.checkpw(password.encode('utf-8'), hashed_password)  # Encode the input password as well
+        if pass_correct:
+            return user
+
+    return None

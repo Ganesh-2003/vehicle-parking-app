@@ -3,7 +3,7 @@ from controllers.auth_controller import auth
 from dotenv import load_dotenv
 import os
 
-app = Flask(__name__)
+app = Flask(__name__) 
 app.secret_key = os.getenv("SECRET_KEY")
 
 # Register Blueprints
