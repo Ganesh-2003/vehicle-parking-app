@@ -1,0 +1,3 @@
+  {% if session.get('user') %}
+      {% include 'navbar.html' %}
+    {% endif %}
