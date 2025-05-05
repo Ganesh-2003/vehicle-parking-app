@@ -1,5 +1,5 @@
 from flask import Blueprint, render_template, request, redirect, url_for, flash, session,jsonify
-from models.parking_lot import insertLotDetails
+from models.parking_lot import createParkingLot,insertParkingLot
 import bcrypt
 
 
@@ -12,7 +12,7 @@ def dashboard():
 @admin.route('/admin/addlot', methods = ['GET','POST'])
 def addlot():
     
-    if request.methods == 'POST':
+    if request.method == 'POST':
         data = request.get_json()
         locationName = data.get('locationName')
         address = data.get('address')
@@ -26,7 +26,24 @@ def addlot():
                 "msg": "Please enter all the details"
             }), 400
         
-        insertLotDetails
+        else:
+            insertParkingLot(locationName,address,pincode,pricePerHour,maxSpots)
+            res =  jsonify({
+                "status": "success",
+                "msg": "Parking lot added successfully",
+                "data": {
+                "locationName": locationName,
+                "address": address,
+                "pincode": pincode,
+                "pricePerHour": pricePerHour,
+                "maxSpots": maxSpots
+                }
+            }), 200
+
+            
+    
+    createParkingLot()
+    
         
     return render_template('admin/addlot.html')
     
