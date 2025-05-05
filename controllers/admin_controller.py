@@ -1,4 +1,5 @@
-from flask import Blueprint, render_template, request, redirect, url_for, flash, session
+from flask import Blueprint, render_template, request, redirect, url_for, flash, session,jsonify
+from models.parking_lot import insertLotDetails
 import bcrypt
 
 
@@ -19,7 +20,13 @@ def addlot():
         pricePerHour = data.get('pricePerHour')
         maxSpots = data.get('maxSpots')
 
-
-
+        if not locationName or not address or not pincode or not pricePerHour or not maxSpots:
+            return jsonify({
+                "status": "error",
+                "msg": "Please enter all the details"
+            }), 400
+        
+        insertLotDetails
+        
     return render_template('admin/addlot.html')
     
