@@ -1,9 +1,9 @@
 import sqlite3
 import bcrypt
-from config import DATABASE
+from config import DATABASE_USER
 
 def create_user_table():
-    connection = sqlite3.connect(DATABASE)
+    connection = sqlite3.connect(DATABASE_USER)
     cur = connection.cursor()
 
     cur.execute(
@@ -37,7 +37,7 @@ def create_user_table():
 
 def check_user(email):
 
-    connection = sqlite3.connect(DATABASE)
+    connection = sqlite3.connect(DATABASE_USER)
     cur = connection.cursor()
     res = cur.execute(
         '''    
@@ -57,7 +57,7 @@ def check_user(email):
 def register_user(email, hashedpassword, fullname, address, pincode):
 
 
-    connection = sqlite3.connect(DATABASE)
+    connection = sqlite3.connect(DATABASE_USER)
     cur = connection.cursor()
     res = cur.execute(
         '''
@@ -70,7 +70,7 @@ def register_user(email, hashedpassword, fullname, address, pincode):
 
 def fetch_user(email,password):
 
-    connection = sqlite3.connect(DATABASE)
+    connection = sqlite3.connect(DATABASE_USER)
     cur = connection.cursor()
     cur.execute(
         '''

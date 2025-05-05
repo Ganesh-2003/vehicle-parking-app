@@ -1,1 +1,25 @@
 {% extends "navbar.html" %}
+
+{% block content %}
+
+<div style="align-items: center;" class="card">
+  <div class="card-body">
+    <h2 >Parking Lots</h2>
+  </div>
+</div>
+
+<div class="d-flex flex-column min-vh-100">
+  <!-- Main content -->
+  <div class="container mt-5">
+    <!-- Your parking lot display here -->
+  </div>
+
+  <!-- Button at the bottom -->
+  <div class="mt-auto p-3 text-center">
+    <button type="button" class="btn btn-outline-dark" onclick="window.location.href='/admin/addlot'">
+  + Add Lot
+</button>
+  </div>
+</div>
+
+{% endblock %}

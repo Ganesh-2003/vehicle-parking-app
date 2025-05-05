@@ -3,7 +3,6 @@ from models.users import create_user_table, register_user, check_user, fetch_use
 from controllers.admin_controller import dashboard
 import bcrypt
 
-
 auth = Blueprint('auth',__name__)
 
 create_user_table()
@@ -43,6 +42,7 @@ def register():
 
 @auth.route('/login', methods=['GET','POST'])
 def login():
+
     if request.method == 'POST':
         email = request.form['email']
         password = request.form['password']
@@ -67,6 +67,7 @@ def login():
     return render_template("login.html")
 
 
+
 # @auth.route('/admin/dashboard',methods=['GET','POST'])
 # def admin_dashboard():
 
@@ -85,9 +86,4 @@ def login():
 
 
 
-
-        
-
-
-    
 

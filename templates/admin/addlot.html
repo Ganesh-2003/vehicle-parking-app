@@ -1,0 +1,80 @@
+{% extends "navbar.html" %}
+
+{% block content %}
+
+    <div style="align-items: center;" class="card">
+        <div class="card-body">
+            <h2>New Parking Lots</h2>
+        </div>
+    </div>
+
+
+    <div style="padding: 50px;" class="d-flex justify-content-center align-items-center min-vh-50">
+        <form class="border p-4 bg-white rounded shadow" style="width: 100%; max-width: 700px;">
+            <div class="row mb-3">
+                <label for="locationName" class="col-sm-2 col-form-label">Location Name</label>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" id="locationName" required>
+                </div>
+            </div>
+            <div class="row mb-3">
+                <label for="address" class="col-sm-2 col-form-label">Address</label>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" id="address" required>
+                </div>
+            </div>
+            <div class="row mb-3">
+                <label for="pincode" class="col-sm-2 col-form-label">PinCode</label>
+                <div class="col-sm-10">
+                    <input type="number" class="form-control" id="pincode" required>
+                </div>
+            </div>
+            <div class="row mb-3">
+                <label for="pricePerHour" class="col-sm-2 col-form-label">Price Per Hour</label>
+                <div class="col-sm-10">
+                    <input type="number" class="form-control" id="pricePerHour" required>
+                </div>
+            </div>
+            <div class="row mb-3">
+                <label for="maxSpots" class="col-sm-2 col-form-label">Maximum Spots</label>
+                <div class="col-sm-10">
+                    <input type="number" class="form-control" id="maxSpots" required>
+                </div>
+            </div>
+      <span>
+        <button id="update" type="submit" class="btn btn-primary" >Update</button>
+        <button id="cancel" type="submit" class="btn btn-primary" >Cancel</button>
+      </span>
+    </form>
+  </div>
+
+  <script>
+    document.getElementById('update').addEventListener('submit', async function (e) {
+        e.preventDefault();
+
+        const locationName = document.getElementById('locationName').value;
+        const address = document.getElementById('address').value;
+        const pincode = document.getElementById('pincode').value;
+        const pricePerHour = document.getElementById('pricePerHour').value;
+        const maxSpots = document.getElementById('maxSpots').value;
+
+        const response = await fetch('{{ url_for("admin.addlot") }}', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ 
+            locationName: locationName,
+            address: address,
+            pincode: pincode,
+            pricePerHour: pricePerHour,
+            maxSpots: maxSpots
+         })
+        });
+
+        const result = await response.json();
+        alert(result.message);  // Show backend response
+    });
+  </script>  
+
+{% endblock %}
