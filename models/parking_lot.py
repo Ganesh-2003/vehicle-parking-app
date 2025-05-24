@@ -9,11 +9,11 @@ def createParkingLot():
         '''
             CREATE TABLE IF NOT EXISTS PARKINGLOT (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
-            prime_location_name TEXT NOT NULL UNIQUE,
-            price TEXT NOT NULL,
+            prime_location_name TEXT NOT NULL,
             address TEXT NOT NULL,
             pincode TEXT NOT NULL,
-            maximum_number_of_spots TEXT NOT NULL,
+            price INTEGER NOT NULL,
+            maximum_number_of_spots INTEGER NOT NULL
         )
         '''
     )
@@ -21,15 +21,19 @@ def createParkingLot():
     connection.commit()
     connection.close()
 
-def insertParkingLot():
+def insertParkingLot(locationName,address,pincode,pricePerHour,maxSpots):
+
     connection = sqlite3.connect(DATABASE_PARKINGLOT)
     cur = connection.cursor()
 
     cur.execute(
         '''
-            INSERT INTO PARKINGLOT (prime_location_name,price,address,pincode,maximum_number_of_spots) VALUES (?,?,?,?,?,?)
-        '''
+            INSERT INTO PARKINGLOT (prime_location_name, address, pincode, price, maximum_number_of_spots) VALUES (?,?,?,?,?)
+        ''',(locationName, address, pincode, pricePerHour, maxSpots)
     )
+
+    connection.commit()
+    connection.close()
 
 
 

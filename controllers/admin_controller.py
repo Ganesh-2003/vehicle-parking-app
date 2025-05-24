@@ -21,26 +21,24 @@ def addlot():
         maxSpots = data.get('maxSpots')
 
         if not locationName or not address or not pincode or not pricePerHour or not maxSpots:
-            return jsonify({
-                "status": "error",
-                "msg": "Please enter all the details"
-            }), 400
+            flash("Please enter all the details", "error")
+            return redirect(url_for('admin.addlot'))
         
         else:
             insertParkingLot(locationName,address,pincode,pricePerHour,maxSpots)
-            res =  jsonify({
-                "status": "success",
-                "msg": "Parking lot added successfully",
-                "data": {
-                "locationName": locationName,
-                "address": address,
-                "pincode": pincode,
-                "pricePerHour": pricePerHour,
-                "maxSpots": maxSpots
-                }
-            }), 200
+            # return jsonify({
+            #     "status": "success",
+            #     "msg": "Parking lot added successfully",
+            #     "data": {
+            #     "locationName": locationName,
+            #     "address": address,
+            #     "pincode": pincode,
+            #     "pricePerHour": pricePerHour,
+            #     "maxSpots": maxSpots
+            #     }
+            # }), 200
 
-            
+            return jsonify({"status": "success", "message": "Parking Lot added successfully"}), 200
     
     createParkingLot()
     
