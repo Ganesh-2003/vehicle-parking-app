@@ -1,6 +1,6 @@
 from flask import Blueprint, render_template, request, redirect, url_for, flash, session,jsonify
-from models.parking_lot import createParkingLot,insertParkingLot
-import bcrypt
+from models.parking_lot import insertParkingLot,createParkingSpots, insertParkingSpots
+
 
 
 admin = Blueprint('admin',__name__)
@@ -25,7 +25,8 @@ def addlot():
             return redirect(url_for('admin.addlot'))
         
         else:
-            insertParkingLot(locationName,address,pincode,pricePerHour,maxSpots)
+            lot_id = insertParkingLot(locationName,address,pincode,pricePerHour,maxSpots)
+            maxSpots = int(maxSpots)
             # return jsonify({
             #     "status": "success",
             #     "msg": "Parking lot added successfully",
@@ -37,11 +38,11 @@ def addlot():
             #     "maxSpots": maxSpots
             #     }
             # }), 200
+            createParkingSpots()
+            for i in range(1,maxSpots+1):
+                insertParkingSpots(lot_id, i)
 
             return jsonify({"status": "success", "message": "Parking Lot added successfully"}), 200
-    
-    createParkingLot()
-    
-        
+            
     return render_template('admin/addlot.html')
     

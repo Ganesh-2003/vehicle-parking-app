@@ -1,8 +1,8 @@
 import sqlite3
-from config import DATABASE_PARKINGLOT
+from config import DATABASE_PARKING
 
 def createParkingLot():
-    connection = sqlite3.connect(DATABASE_PARKINGLOT)
+    connection = sqlite3.connect(DATABASE_PARKING)
     cur = connection.cursor()
 
     cur.execute(
@@ -23,7 +23,7 @@ def createParkingLot():
 
 def insertParkingLot(locationName,address,pincode,pricePerHour,maxSpots):
 
-    connection = sqlite3.connect(DATABASE_PARKINGLOT)
+    connection = sqlite3.connect(DATABASE_PARKING)
     cur = connection.cursor()
 
     cur.execute(
@@ -34,6 +34,42 @@ def insertParkingLot(locationName,address,pincode,pricePerHour,maxSpots):
 
     connection.commit()
     connection.close()
+    return cur.lastrowid
+
+def createParkingSpots():
+
+    connection = sqlite3.connect(DATABASE_PARKING)
+    cur = connection.cursor()
+
+    cur.execute(
+        '''
+        CREATE TABLE IF NOT EXISTS PARKINGSPOTS (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        lot_id INTEGER NOT NULL,
+        status TEXT CHECK(status IN ('O', 'A')) NOT NULL DEFAULT 'A',
+        spot_number INTEGER,  -- Optional: to identify spot within a lot
+        FOREIGN KEY (lot_id) REFERENCES PARKINGLOT(id) ON DELETE CASCADE
+        );
+    '''
+    )
+
+    connection.commit()
+    connection.close()
+
+def insertParkingSpots(lot_id, i):
+
+    connection = sqlite3.connect(DATABASE_PARKING)
+    cur = connection.cursor()
+
+    cur.execute(
+        '''
+            INSERT INTO PARKINGSPOTS (lot_id, status, spot_number) VALUES (?,?,?) 
+        ''',(lot_id, 'A', i)
+    )
+
+    connection.commit()
+    connection.close()
+
 
 
 

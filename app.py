@@ -2,6 +2,7 @@ from flask import Flask
 from controllers.auth_controller import auth
 from controllers.admin_controller import admin
 from controllers.user_controller import user
+from models.parking_lot import createParkingLot
 from dotenv import load_dotenv
 import os
 
@@ -15,4 +16,5 @@ app.register_blueprint(admin)
 app.register_blueprint(user)
 
 if __name__ == '__main__':
+    createParkingLot()
     app.run(debug=True)
