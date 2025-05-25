@@ -8,9 +8,24 @@
   </div>
 </div>
 
-<div class="d-flex flex-column min-vh-100">
+<div class="d-flex flex-column min-vh-100" style="margin-left: 100;">
   <!-- Main content -->
-
+  {%for lot in lots_data%}
+  <div class="parking_lot card-body" >
+    <h3>Parking# {{ lot.lot[0] }}</h3>
+      <a href="#"> Edit </a> |<a href="#"> Delete </a>
+      <p style="color: green;">(Occupied : {{ lot.occupied }}/{{ lot.total }})</p>
+      <div class="spot">
+        {% for spot in lot.spots %}
+          {% if spot[2] == 'O' %}  
+            <div class="Occupied">{{spot[2]}}</div>
+          {% else %}
+            <div class="available">{{spot[2]}}</div>
+          {% endif %}
+        {% endfor %}
+      </div>
+    {% endfor %}
+  </div>
 
   <!-- Button at the bottom -->
   <div class="mt-auto p-3 text-center">

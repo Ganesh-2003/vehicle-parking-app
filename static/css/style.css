@@ -9,3 +9,31 @@ body {
   box-shadow: 0px 0px 10px #ccc;
 }
 
+.parking-lot {
+             border: 10px solid #ccc;
+    border-radius: 10px;
+    padding: 20px;
+    margin: 20px auto;
+    width: 80%;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    background-color: #f9f9f9;
+}
+.spot {
+            display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.Occupied, .available {
+    width: 40px;
+    height: 40px;
+    text-align: center;
+    line-height: 40px;
+    border-radius: 5px;
+    font-weight: bold;
+    color: white;
+  }
+.available { background-color: lightgreen; border: 2px solid green; }
+.occupied { background-color: pink; border: 2px solid red; }
+

@@ -1,17 +1,48 @@
 from flask import Blueprint, render_template, request, redirect, url_for, flash, session,jsonify
-from models.parking_lot import insertParkingLot,createParkingSpots, insertParkingSpots
-
-
+from models.parking_lot import insertParkingLot,createParkingSpots, insertParkingSpots, get_all_parking_lots,get_all_parking_spots
 
 admin = Blueprint('admin',__name__)
 
 @admin.route("/admin/dashboard", methods = ['GET','POST'])
 def dashboard():
-    return render_template("dashboard/admin_dashboard.html")
+
+    #Querying and filling parking lots in home page
+    def getOccupiedValue(spots):
+        occupied = 0
+        for s in spots:
+            if s[2] == 'O': #Getting status
+                occupied = occupied+1 
+
+        return occupied
+    
+    lots = get_all_parking_lots()
+    print(lots)
+
+    all_parking_lots = []
+    
+    for lot in lots:
+        # Assuming lot is a tuple and the first element is the id
+        lot_id = lot[0]
+        spots = get_all_parking_spots(lot_id)
+        total = len(spots)
+        occupied = getOccupiedValue(spots)
+        available = total - occupied
+
+        all_parking_lots.append({
+            "lot": lot,
+            "spots": spots,
+            "total": total,
+            "occupied": occupied,
+            "available": available
+        })
+
+    print(all_parking_lots)
+
+    return render_template("dashboard/admin_dashboard.html", lots_data = all_parking_lots)
 
 @admin.route('/admin/addlot', methods = ['GET','POST'])
 def addlot():
-    
+
     if request.method == 'POST':
         data = request.get_json()
         locationName = data.get('locationName')

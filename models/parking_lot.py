@@ -70,6 +70,38 @@ def insertParkingSpots(lot_id, i):
     connection.commit()
     connection.close()
 
+def get_all_parking_lots():
+
+    connection = sqlite3.connect(DATABASE_PARKING)
+    cur = connection.cursor()
+
+    cur.execute(''' Select * from PARKINGLOT ''')
+    lots = cur.fetchall()
+
+    connection.commit()
+    connection.close()
+    
+    return lots
+
+def get_all_parking_spots(lot_id):
+
+    connection = sqlite3.connect(DATABASE_PARKING)
+    cur = connection.cursor()
+
+    cur.execute('''
+                    Select * from PARKINGSPOTS where lot_id = (?)
+                ''', (lot_id,))
+    
+    spots = cur.fetchall()
+
+    connection.commit()
+    connection.close()
+
+    return spots
+
+
+
+
 
 
 
