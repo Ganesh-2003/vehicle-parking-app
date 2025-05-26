@@ -1,5 +1,5 @@
 from flask import Blueprint, render_template, request, redirect, url_for, flash, session,jsonify
-from models.parking_lot import insertParkingLot,createParkingSpots, insertParkingSpots, get_all_parking_lots,get_all_parking_spots
+from models.parking_lot import insertParkingLot,createParkingSpots, insertParkingSpots, get_all_parking_lots,get_all_parking_spots,fetch_parking_lot
 
 admin = Blueprint('admin',__name__)
 
@@ -76,4 +76,11 @@ def addlot():
             return jsonify({"status": "success", "message": "Parking Lot added successfully"}), 200
             
     return render_template('admin/addlot.html')
+
+@admin.route('/admin/edit', methods=['GET', 'POST'])
+def editSpot():
+    # You can now use lot_id inside this function
+    lot_id = request.args.get('lot_id', type=int)
+    
+    return render_template("admin/editParkinglot.html", lot_id=lot_id)
     

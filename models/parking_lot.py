@@ -99,6 +99,17 @@ def get_all_parking_spots(lot_id):
 
     return spots
 
+def fetch_parking_lot():
+
+    connection = sqlite3.connect(DATABASE_PARKING)
+    cur = connection.cursor()
+
+    cur.execute(
+        '''
+
+        '''
+    )
+
 
 
 

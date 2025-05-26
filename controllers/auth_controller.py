@@ -66,7 +66,7 @@ def login():
                     
     return render_template("login.html")
 
-
+ 
 
 # @auth.route('/admin/dashboard',methods=['GET','POST'])
 # def admin_dashboard():

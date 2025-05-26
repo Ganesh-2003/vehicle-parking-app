@@ -8,31 +8,33 @@
   </div>
 </div>
 
-<div class="d-flex flex-column min-vh-100" style="margin-left: 100;">
+<!-- Button at the bottom -->
+<div class="mt-auto p-3 text-center">
+  <button type="button" class="btn btn-outline-dark btn_add_lot" onclick="window.location.href='/admin/addlot'">
+    + Add Lot
+  </button>
+</div>
+<div class=" d-flex flex-row align-content-center justify-content-evenly" style="margin-left: 100;">
   <!-- Main content -->
-  {%for lot in lots_data%}
-  <div class="parking_lot card-body" >
-    <h3>Parking# {{ lot.lot[0] }}</h3>
-      <a href="#"> Edit </a> |<a href="#"> Delete </a>
-      <p style="color: green;">(Occupied : {{ lot.occupied }}/{{ lot.total }})</p>
+  {% for lot in lots_data %}
+    <div class="parking_lot">
+      <h3>Parking# {{ lot.lot[0] }}</h3>
+      <a onclick="window.location.href='/admin/edit?lot_id={{ lot.lot[0] }}'" class="btn-outline-dark">Edit</a> | 
+      <a href="/admin/delete?lot_id={{ lot.lot[0] }}">Delete</a>
+      <p style="color: green;">(Occupied: {{ lot.occupied }}/{{ lot.total }})</p>
+
       <div class="spot">
         {% for spot in lot.spots %}
-          {% if spot[2] == 'O' %}  
-            <div class="Occupied">{{spot[2]}}</div>
+          {% if spot[2] == 'O' %}
+            <div class="Occupied">O</div>
           {% else %}
-            <div class="available">{{spot[2]}}</div>
+            <div class="available">A</div>
           {% endif %}
         {% endfor %}
       </div>
-    {% endfor %}
-  </div>
-
-  <!-- Button at the bottom -->
-  <div class="mt-auto p-3 text-center">
-    <button type="button" class="btn btn-outline-dark" onclick="window.location.href='/admin/addlot'">
-  + Add Lot
-</button>
-  </div>
+    </div>
+  {% endfor %}
+              
 </div>
 
 {% endblock %}
