@@ -99,16 +99,36 @@ def get_all_parking_spots(lot_id):
 
     return spots
 
-def fetch_parking_lot():
+def fetch_parking_lot(lot_id):
 
     connection = sqlite3.connect(DATABASE_PARKING)
     cur = connection.cursor()
 
     cur.execute(
         '''
-
-        '''
+            Select * from PARKINGLOT where id = (?)
+        ''',(lot_id,)
     )
+
+    parkinglotData = cur.fetchone()
+
+    connection.commit()
+    connection.close()
+
+    return parkinglotData
+
+def updateParkinglot(locationName,address,pincode,pricePerHour,maxSpots,lot_id):
+
+    connection = sqlite3.connect(DATABASE_PARKING)
+    cur = connection.cursor()
+    cur.execute('''
+                UPDATE PARKINGLOT SET prime_location_name = ?, address = ?, pincode = ?, price = ?, maximum_number_of_spots = ?
+                WHERE id = ?
+            ''',(locationName,address,pincode,pricePerHour,maxSpots,lot_id,)
+            )
+    connection.commit()
+    connection.close()
+
 
 
 

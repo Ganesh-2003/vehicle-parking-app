@@ -14,31 +14,31 @@
             <div class="row mb-3">
                 <label for="locationName" class="col-sm-2 col-form-label">Location Name</label>
                 <div class="col-sm-10">
-                    <input type="text" class="form-control" id="locationName" required>
+                    <input type="text" class="form-control" id="locationName" value="{{ parking_lot_data[1] }}" required>
                 </div>
             </div>
             <div class="row mb-3">
                 <label for="address" class="col-sm-2 col-form-label">Address</label>
                 <div class="col-sm-10">
-                    <input type="text" class="form-control" id="address" required>
+                    <input type="text" class="form-control" id="address" value = "{{parking_lot_data[2]}}"required>
                 </div>
             </div>
             <div class="row mb-3">
                 <label for="pincode" class="col-sm-2 col-form-label">PinCode</label>
                 <div class="col-sm-10">
-                    <input type="number" class="form-control" id="pincode" required>
+                    <input type="number" class="form-control" id="pincode" value="{{parking_lot_data[3]}}" required>
                 </div>
             </div>
             <div class="row mb-3">
                 <label for="pricePerHour" class="col-sm-2 col-form-label">Price Per Hour</label>
                 <div class="col-sm-10">
-                    <input type="number" class="form-control" id="pricePerHour" required>
+                    <input type="number" class="form-control" id="pricePerHour" value="{{parking_lot_data[4]}}" required>
                 </div>
             </div>
             <div class="row mb-3">
                 <label for="maxSpots" class="col-sm-2 col-form-label">Maximum Spots</label>
                 <div class="col-sm-10">
-                    <input type="number" class="form-control" id="maxSpots" required>
+                    <input type="number" class="form-control" id="maxSpots" value="{{parking_lot_data[5]}}" required>
                 </div>
             </div>
       <span>
@@ -47,5 +47,42 @@
       </span>
     </form>
   </div>
+
+  <script>
+    document.getElementById('lotForm').addEventListener('submit', async function (e) {
+        e.preventDefault();
+
+        const locationName = document.getElementById('locationName').value;
+        const address = document.getElementById('address').value;
+        const pincode = document.getElementById('pincode').value;
+        const pricePerHour = document.getElementById('pricePerHour').value;
+        const maxSpots = document.getElementById('maxSpots').value;
+
+        console.log("MAXSPOTS: "+ maxSpots)
+
+        const response = await fetch('{{ url_for("admin.editSpot") }}', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ 
+            locationName: locationName,
+            address: address,
+            pincode: pincode,
+            pricePerHour: pricePerHour,
+            maxSpots: maxSpots
+         })
+        });
+
+        const result = await response.json();
+        if(result.status == "success") {
+            window.location.href = '{{url_for("admin.dashboard")}}'
+        }
+        else {
+            alert("Failed to Add Lot")
+        }
+        alert(result.message);  // Show backend response
+    });
+  </script>
 
 {% endblock %}

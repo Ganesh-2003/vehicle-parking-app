@@ -1,5 +1,5 @@
 from flask import Blueprint, render_template, request, redirect, url_for, flash, session,jsonify
-from models.parking_lot import insertParkingLot,createParkingSpots, insertParkingSpots, get_all_parking_lots,get_all_parking_spots,fetch_parking_lot
+from models.parking_lot import insertParkingLot,createParkingSpots, insertParkingSpots, get_all_parking_lots,get_all_parking_spots,fetch_parking_lot, updateParkinglot
 
 admin = Blueprint('admin',__name__)
 
@@ -81,6 +81,22 @@ def addlot():
 def editSpot():
     # You can now use lot_id inside this function
     lot_id = request.args.get('lot_id', type=int)
+    if request.method == 'POST':
+        data = request.get_json()
+        locationName = data.get('locationName')
+        address = data.get('address')
+        pincode = data.get('pincode')
+        pricePerHour = data.get('pricePerHour')
+        maxSpots = data.get('maxSpots')
+
+        if not locationName or not address or not pincode or not pricePerHour or not maxSpots:
+            return jsonify({"status": "error", "message": "Please enter all the details"}), 400
+        else:
+            updateParkinglot(locationName, address, pincode, pricePerHour, maxSpots,lot_id)
+            return jsonify({"status": "success", "message": "Parking lot updated successfully"}), 200
+            
     
-    return render_template("admin/editParkinglot.html", lot_id=lot_id)
+    parkinglotdata = fetch_parking_lot(lot_id)
+    print(parkinglotdata)
+    return render_template("admin/editParkinglot.html", parking_lot_data = parkinglotdata)
     
