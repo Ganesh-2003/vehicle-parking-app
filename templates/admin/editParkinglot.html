@@ -59,7 +59,7 @@
         const maxSpots = document.getElementById('maxSpots').value;
 
         console.log("MAXSPOTS: "+ maxSpots)
-
+        console.log("{{parking_lot_data[0]}}")
         const response = await fetch('{{ url_for("admin.editSpot") }}', {
         method: 'POST',
         headers: {
@@ -70,7 +70,8 @@
             address: address,
             pincode: pincode,
             pricePerHour: pricePerHour,
-            maxSpots: maxSpots
+            maxSpots: maxSpots,
+            lot_id: "{{ parking_lot_data[0]}}"
          })
         });
 

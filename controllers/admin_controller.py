@@ -1,5 +1,5 @@
 from flask import Blueprint, render_template, request, redirect, url_for, flash, session,jsonify
-from models.parking_lot import insertParkingLot,createParkingSpots, insertParkingSpots, get_all_parking_lots,get_all_parking_spots,fetch_parking_lot, updateParkinglot
+from models.parking_lot import insertParkingLot,createParkingSpots, insertParkingSpots, get_all_parking_lots, get_all_parking_spots, fetch_parking_lot, updateParkinglot, deleteParkingLot
 
 admin = Blueprint('admin',__name__)
 
@@ -58,17 +58,6 @@ def addlot():
         else:
             lot_id = insertParkingLot(locationName,address,pincode,pricePerHour,maxSpots)
             maxSpots = int(maxSpots)
-            # return jsonify({
-            #     "status": "success",
-            #     "msg": "Parking lot added successfully",
-            #     "data": {
-            #     "locationName": locationName,
-            #     "address": address,
-            #     "pincode": pincode,
-            #     "pricePerHour": pricePerHour,
-            #     "maxSpots": maxSpots
-            #     }
-            # }), 200
             createParkingSpots()
             for i in range(1,maxSpots+1):
                 insertParkingSpots(lot_id, i)
@@ -79,8 +68,7 @@ def addlot():
 
 @admin.route('/admin/edit', methods=['GET', 'POST'])
 def editSpot():
-    # You can now use lot_id inside this function
-    lot_id = request.args.get('lot_id', type=int)
+    
     if request.method == 'POST':
         data = request.get_json()
         locationName = data.get('locationName')
@@ -88,6 +76,8 @@ def editSpot():
         pincode = data.get('pincode')
         pricePerHour = data.get('pricePerHour')
         maxSpots = data.get('maxSpots')
+        lot_id = int(data.get('lot_id'))
+        print(data)
 
         if not locationName or not address or not pincode or not pricePerHour or not maxSpots:
             return jsonify({"status": "error", "message": "Please enter all the details"}), 400
@@ -95,8 +85,16 @@ def editSpot():
             updateParkinglot(locationName, address, pincode, pricePerHour, maxSpots,lot_id)
             return jsonify({"status": "success", "message": "Parking lot updated successfully"}), 200
             
-    
+    lot_id = request.args.get('lot_id', type=int)
+    print("Lot id : ", lot_id)
     parkinglotdata = fetch_parking_lot(lot_id)
-    print(parkinglotdata)
-    return render_template("admin/editParkinglot.html", parking_lot_data = parkinglotdata)
+    return render_template("admin/editParkinglot.html", parking_lot_data = parkinglotdata, lot_id = lot_id)
+
+@admin.route('/admin/delete', methods = ['GET','POST'])
+def deletelot():
+
+    lot_id = request.args.get('lot_id', type=int)
+    deleteParkingLot(lot_id)
+    
+
     
