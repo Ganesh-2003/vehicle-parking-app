@@ -90,6 +90,7 @@ def editSpot():
     parkinglotdata = fetch_parking_lot(lot_id)
     return render_template("admin/editParkinglot.html", parking_lot_data = parkinglotdata, lot_id = lot_id)
 
+
 @admin.route('/admin/delete', methods = ['GET','POST'])
 def deletelot():
 
