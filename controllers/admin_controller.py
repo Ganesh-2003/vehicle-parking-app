@@ -95,6 +95,7 @@ def deletelot():
 
     lot_id = request.args.get('lot_id', type=int)
     deleteParkingLot(lot_id)
+    return render_template("dashboard/admin_dashboard.html")
     
 
     
