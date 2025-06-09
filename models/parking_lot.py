@@ -139,7 +139,7 @@ def deleteParkingLot(lot_id):
     cur = connection.cursor()
 
     cur.execute( '''
-        Delete from PARKINGLOT where = ?
+        Delete from PARKINGLOT where id = ?
 ''',(lot_id,)
     )
 

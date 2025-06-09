@@ -1,5 +1,5 @@
 from flask import Blueprint, render_template, request, redirect, url_for, flash, session,jsonify
-from models.parking_lot import insertParkingLot,createParkingSpots, insertParkingSpots, get_all_parking_lots, get_all_parking_spots, fetch_parking_lot, updateParkinglot, deleteParkingLot
+from models.parking_lot import insertParkingLot,createParkingSpots, insertParkingSpots, get_all_parking_lots, get_all_parking_spots, fetch_parking_lot, updateParkinglot, deleteParkingLot, updateSpotDetails
 
 admin = Blueprint('admin',__name__)
 
@@ -83,6 +83,7 @@ def editSpot():
             return jsonify({"status": "error", "message": "Please enter all the details"}), 400
         else:
             updateParkinglot(locationName, address, pincode, pricePerHour, maxSpots,lot_id)
+
             return jsonify({"status": "success", "message": "Parking lot updated successfully"}), 200
             
     lot_id = request.args.get('lot_id', type=int)
@@ -90,13 +91,14 @@ def editSpot():
     parkinglotdata = fetch_parking_lot(lot_id)
     return render_template("admin/editParkinglot.html", parking_lot_data = parkinglotdata, lot_id = lot_id)
 
-
+    
 @admin.route('/admin/delete', methods = ['GET','POST'])
 def deletelot():
 
     lot_id = request.args.get('lot_id', type=int)
     deleteParkingLot(lot_id)
-    return render_template("dashboard/admin_dashboard.html")
+    return redirect(url_for('admin.dashboard'))
+    
     
 
     
