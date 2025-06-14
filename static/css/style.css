@@ -14,7 +14,7 @@ body {
     border-radius: 10px;
     padding: 20px;
     margin: 20px auto;
-    width: 30vw;
+    width: 25vw;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
@@ -40,5 +40,15 @@ body {
 
 .btn_add_lot {
   background-color: bisque;
+}
+
+.delete-confirmation-box {
+  margin: 250px auto 20px auto;
+  border: 20px red;
+  padding: 20px;
+  width: 25vw;
+  box-shadow: 10px 5px 5px red;
+  /* box-shadow: 0 0 2px 2px red;  */
+  border-radius: 10px;
 }
 

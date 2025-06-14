@@ -1,5 +1,5 @@
 from flask import Blueprint, render_template, request, redirect, url_for, flash, session,jsonify
-from models.parking_lot import insertParkingLot,createParkingSpots, insertParkingSpots, get_all_parking_lots, get_all_parking_spots, fetch_parking_lot, updateParkinglot, deleteParkingLot, updateSpotDetails
+from models.parking_lot import insertParkingLot,createParkingSpots, insertParkingSpots, get_all_parking_lots, get_all_parking_spots, fetch_parking_lot, updateParkinglot, deleteParkingLot
 
 admin = Blueprint('admin',__name__)
 
@@ -24,7 +24,7 @@ def dashboard():
         # Assuming lot is a tuple and the first element is the id
         lot_id = lot[0]
         spots = get_all_parking_spots(lot_id)
-        total = len(spots)
+        total = len(spots)   
         occupied = getOccupiedValue(spots)
         available = total - occupied
 
@@ -83,7 +83,6 @@ def editSpot():
             return jsonify({"status": "error", "message": "Please enter all the details"}), 400
         else:
             updateParkinglot(locationName, address, pincode, pricePerHour, maxSpots,lot_id)
-            updateParkingSpot()
             return jsonify({"status": "success", "message": "Parking lot updated successfully"}), 200
             
     lot_id = request.args.get('lot_id', type=int)
@@ -91,14 +90,28 @@ def editSpot():
     parkinglotdata = fetch_parking_lot(lot_id)
     return render_template("admin/editParkinglot.html", parking_lot_data = parkinglotdata, lot_id = lot_id)
 
-    
-@admin.route('/admin/delete', methods = ['GET','POST'])
-def deletelot():
 
-    lot_id = request.args.get('lot_id', type=int)
-    deleteParkingLot(lot_id)
-    return redirect(url_for('admin.dashboard'))
+@admin.route('/admin/delete', methods=['GET', 'POST'])
+def deletelot():
     
+    lot_id = request.args.get('lot_id', type=int)
+
+    if not lot_id:
+        flash("Invalid or missing parking lot ID.", "error")
+        return redirect(url_for('admin.dashboard'))
+
+    parkinglotdata = fetch_parking_lot(lot_id)
+    if not parkinglotdata:
+        flash("Parking lot not found.", "error")
+        return redirect(url_for('admin.dashboard'))
+
+    if request.method == 'POST':
+        deleteParkingLot(lot_id) #Parking lot deletion in POST METHOD
+        flash("Parking lot deleted successfully.", "success")
+        return redirect(url_for('admin.dashboard'))
+
+    return render_template("admin/confirm_delete.html", parking_lot_data=parkinglotdata, lot_id=lot_id)
+
     
 
     

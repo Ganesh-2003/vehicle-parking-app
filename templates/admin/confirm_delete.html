@@ -1,0 +1,21 @@
+{% extends "navbar.html" %}
+
+{% block content %}
+<style>
+    .bold-text {
+        font-weight: bold;
+    }
+</style>
+
+    <form method="post" action="{{ url_for('admin.deletelot', lot_id=lot_id) }}">
+        <div class = "delete-confirmation-box">
+            <h3>Are you sure you want to delete the Parking Lot {{ lot_id }}?</h3>
+            <br>
+            <span>
+                <button type="submit" class="btn btn-outline-danger"><span class="bold-text">Delete</span></button>
+                <button onclick="window.location.href='/admin/dashboard'" type="button" class="btn btn-outline-secondary" ><span class="bold-text">Cancel</span></button>
+            </span>
+        </div>
+    </form>
+
+{% endblock %}
