@@ -133,15 +133,18 @@ def updateParkinglot(locationName,address,pincode,pricePerHour,maxSpots,lot_id):
     connection.close()
     return updated_rows  # Returns the number of rows updated, should be 1 if successful
 
-def deleteParkingLot(lot_id):
+def deleteParkingLotAndSpot(lot_id):
 
     connection = sqlite3.connect(DATABASE_PARKING)
     cur = connection.cursor()
 
     cur.execute( '''
-        Delete from PARKINGLOT where id = ?
-''',(lot_id,)
-    )
+                Delete from PARKINGLOT where id = ?
+                ''',(lot_id,))
+
+    cur.execute('''
+                    DELETE FROM PARKINGSPOTS where lot_id = ?
+                ''',(lot_id,))
 
     connection.commit()
     connection.close()
