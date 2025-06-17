@@ -57,6 +57,7 @@ body {
 }
 
 .view-Spot {
+  background-color: #B8CFCE;
   margin: 250px auto 20px auto;
   border: 20px rgb(50, 48, 48);
   padding: 20px;
@@ -64,15 +65,24 @@ body {
   box-shadow: 10px 5px 5px rgb(77, 76, 76);
   /* box-shadow: 0 0 2px 2px red;  */
   border-radius: 10px;
+  font-weight: bold;
 }
 
 .title {
-      background-color: #ffe79b;
+      background-color: #393E46;
       border: 2px solid black;
       border-radius: 10px;
       text-align: center;
-      padding: 10px;
+      padding: 20px;
       font-weight: bold;
-      font-size: 18px;
+      font-size: 25px;
       margin-bottom: 20px;
+      color: #EEEEEE;
     }
+
+.table-css{
+  margin: 100px;
+  width: 90vw;
+  border: 2px solid black;
+  background-color: #B8CFCE;
+}

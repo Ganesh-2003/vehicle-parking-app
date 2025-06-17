@@ -1,5 +1,5 @@
 import sqlite3
-from config import DATABASE_PARKING
+from config import DATABASE_PARKING,DATABASE_USER
 
 def createParkingLot():
     connection = sqlite3.connect(DATABASE_PARKING)
@@ -47,7 +47,7 @@ def createParkingSpots():
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         lot_id INTEGER NOT NULL,
         status TEXT CHECK(status IN ('O', 'A')) NOT NULL DEFAULT 'A',
-        spot_number INTEGER,  -- Optional: to identify spot within a lot
+        spot_id INTEGER,  -- Optional: to identify spot within a lot
         FOREIGN KEY (lot_id) REFERENCES PARKINGLOT(id) ON DELETE CASCADE
         );
     '''
@@ -56,6 +56,27 @@ def createParkingSpots():
     connection.commit()
     connection.close()
 
+def createReserveParkingSpot():
+
+    connection = sqlite3.connect(DATABASE_PARKING)
+    cur = connection.cursor()
+
+    cur.execute(
+            '''
+                CREATE TABLE Reserve_Parking_Spot (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                spot_id INTEGER NOT NULL,
+                user_id INTEGER NOT NULL,
+                parking_timestamp DATETIME NOT NULL,
+                leaving_timestamp DATETIME,
+                parking_cost_per_unit_time REAL,
+
+                FOREIGN KEY (spot_id) REFERENCES PARKINGSPOTS(spot_id),
+                FOREIGN KEY (user_id) REFERENCES USERS(Id)
+                );
+            '''
+    )
+
 def insertParkingSpots(lot_id, i):
 
     connection = sqlite3.connect(DATABASE_PARKING)
@@ -63,7 +84,7 @@ def insertParkingSpots(lot_id, i):
 
     cur.execute(
         '''
-            INSERT INTO PARKINGSPOTS (lot_id, status, spot_number) VALUES (?,?,?) 
+            INSERT INTO PARKINGSPOTS (lot_id, status, spot_id) VALUES (?,?,?) 
         ''',(lot_id, 'A', i)
     )
 
@@ -156,7 +177,7 @@ def deleteParticularParkingSpot(spot_id, lot_id):
     cur = connection.cursor()
 
     cur.execute('''
-                    DELETE FROM PARKINGSPOTS where lot_id = ? AND spot_number = ?
+                    DELETE FROM PARKINGSPOTS where lot_id = ? AND spot_id = ?
                 ''',(lot_id, spot_id))
     
     cur.execute('''
@@ -168,6 +189,24 @@ def deleteParticularParkingSpot(spot_id, lot_id):
     connection.commit()
     connection.close()
 
+def getUsersData():
+
+    connection = sqlite3.connect(DATABASE_USER)
+    cur = connection.cursor()
+
+    cur.execute('''
+                    SELECT * FROM USERS
+                ''')
+    
+    users_data = cur.fetchall()
+    
+    connection.commit()
+    connection.close()
+
+    return users_data
+
+
+    
 
 
 

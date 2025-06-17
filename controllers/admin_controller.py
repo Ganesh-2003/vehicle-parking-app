@@ -1,5 +1,5 @@
 from flask import Blueprint, render_template, request, redirect, url_for, flash, session,jsonify
-from models.parking_lot import insertParkingLot,createParkingSpots, insertParkingSpots, get_all_parking_lots, get_all_parking_spots, fetch_parking_lot, updateParkinglot, deleteParkingLotAndSpot, deleteParticularParkingSpot
+from models.parking_lot import insertParkingLot,createParkingSpots, insertParkingSpots, get_all_parking_lots, get_all_parking_spots, fetch_parking_lot, updateParkinglot, deleteParkingLotAndSpot, deleteParticularParkingSpot, getUsersData
 
 admin = Blueprint('admin',__name__)
 
@@ -115,7 +115,6 @@ def deletelot():
 
 @admin.route('/admin/viewSpot', methods = ['GET','POST'])
 def viewSpot():
-    print("Hi")
     spot_id = request.args.get('spot_id',type = int)
     lot_id = request.args.get('lot_id',type = int)
     status = request.args.get('status',type = str)
@@ -129,6 +128,13 @@ def viewSpot():
     
 
     return render_template("admin/viewSpot.html", spot_id = spot_id, lot_id = lot_id, status = status)
+
+@admin.route('/admin/users', methods = ['GET','POST'])
+def viewUsers():
+    
+    users_data = getUsersData()
+
+    return render_template("admin/userslist.html",users_data = users_data)
 
     
 
