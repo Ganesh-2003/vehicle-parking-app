@@ -1,5 +1,5 @@
 import sqlite3
-from config import DATABASE_PARKING,DATABASE_USER
+from config import DATABASE_PARKING
 
 def createParkingLot():
     connection = sqlite3.connect(DATABASE_PARKING)
@@ -63,7 +63,7 @@ def createReserveParkingSpot():
 
     cur.execute(
             '''
-                CREATE TABLE Reserve_Parking_Spot (
+                CREATE TABLE IF NOT EXISTS Reserve_Parking_Spot (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
                 spot_id INTEGER NOT NULL,
                 user_id INTEGER NOT NULL,
@@ -76,6 +76,9 @@ def createReserveParkingSpot():
                 );
             '''
     )
+
+    connection.commit()
+    connection.close()
 
 def insertParkingSpots(lot_id, i):
 
@@ -191,7 +194,7 @@ def deleteParticularParkingSpot(spot_id, lot_id):
 
 def getUsersData():
 
-    connection = sqlite3.connect(DATABASE_USER)
+    connection = sqlite3.connect(DATABASE_PARKING)
     cur = connection.cursor()
 
     cur.execute('''

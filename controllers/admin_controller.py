@@ -58,7 +58,6 @@ def addlot():
         else:
             lot_id = insertParkingLot(locationName,address,pincode,pricePerHour,maxSpots)
             maxSpots = int(maxSpots)
-            createParkingSpots()
             for i in range(1,maxSpots+1):
                 insertParkingSpots(lot_id, i)
 

@@ -14,7 +14,7 @@
   <!-- Main content -->
   {% for lot in lots_data %}
     <div class="parking_lot">
-      <h3>Parking# {{ lot.lot[0] }}</h3>
+      <h3>Parking #{{ lot.lot[0] }}</h3>
       <a onclick="window.location.href='/admin/edit?lot_id={{ lot.lot[0] }}'" class="btn-outline-dark">Edit</a> | 
       <a href="/admin/delete?lot_id={{ lot.lot[0] }}">Delete</a>
       <p style="color: green;">(Occupied: {{ lot.occupied }}/{{ lot.total }})</p>
