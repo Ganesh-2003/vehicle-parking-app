@@ -12,7 +12,7 @@ def createParkingLot():
             prime_location_name TEXT NOT NULL,
             address TEXT NOT NULL,
             pincode TEXT NOT NULL,
-            price INTEGER NOT NULL,
+            price INTEGER NOT NULL, 
             maximum_number_of_spots INTEGER NOT NULL
         )
         '''
@@ -146,6 +146,25 @@ def deleteParkingLotAndSpot(lot_id):
                     DELETE FROM PARKINGSPOTS where lot_id = ?
                 ''',(lot_id,))
 
+    connection.commit()
+    connection.close()
+
+
+def deleteParticularParkingSpot(spot_id, lot_id):
+
+    connection = sqlite3.connect(DATABASE_PARKING)
+    cur = connection.cursor()
+
+    cur.execute('''
+                    DELETE FROM PARKINGSPOTS where lot_id = ? AND spot_number = ?
+                ''',(lot_id, spot_id))
+    
+    cur.execute('''
+                    UPDATE PARKINGLOT
+                    SET maximum_number_of_spots = maximum_number_of_spots - 1
+                    WHERE lot_id = ? AND maximum_number_of_spots > 0; 
+                ''',(lot_id))
+    
     connection.commit()
     connection.close()
 

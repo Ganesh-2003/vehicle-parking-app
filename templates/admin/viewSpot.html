@@ -1,0 +1,29 @@
+{% extends "navbar.html" %}
+
+{% block content %}
+
+    <div>
+        <div class="title">View/Delete Parking Spot</div>
+        <form method="post" action="{{ url_for('admin.viewSpot', lot_id=lot_id,spot_id=spot_id,status=status) }}">
+            <div class = "view-Spot">
+                <div class="field">
+                    <span class="field-label">ID :</span>
+                    <input class="input-box" type="text" name="spot_id" id="spot_id" value="{{ spot_id }}" readonly>
+                </div>
+                <br>
+                <div class="field">
+                    <span class="field-label">Status :</span>
+                    <input class="input-box" type="text" name="status" id="status" value="{{ status }}" readonly>
+                </div>
+                <br>
+                <div>
+                    {%if status == 'A'%}
+                        <button type="submit" class="btn btn-outline-danger"> Delete </button>
+                    {% endif %}
+                        <button type="button"  onclick="window.location.href='/admin/dashboard'" class="btn btn-outline-secondary">Close</button>
+                </div>
+            </div>
+        </form>
+    </div>
+
+{% endblock %}

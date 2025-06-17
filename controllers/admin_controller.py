@@ -1,5 +1,5 @@
 from flask import Blueprint, render_template, request, redirect, url_for, flash, session,jsonify
-from models.parking_lot import insertParkingLot,createParkingSpots, insertParkingSpots, get_all_parking_lots, get_all_parking_spots, fetch_parking_lot, updateParkinglot, deleteParkingLotAndSpot
+from models.parking_lot import insertParkingLot,createParkingSpots, insertParkingSpots, get_all_parking_lots, get_all_parking_spots, fetch_parking_lot, updateParkinglot, deleteParkingLotAndSpot, deleteParticularParkingSpot
 
 admin = Blueprint('admin',__name__)
 
@@ -113,19 +113,22 @@ def deletelot():
 
     return render_template("admin/confirm_delete.html", parking_lot_data=parkinglotdata, lot_id=lot_id)
 
-@admin.route('admin/viewSpot', methods = ['GET','POST'])
+@admin.route('/admin/viewSpot', methods = ['GET','POST'])
 def viewSpot():
-    
+    print("Hi")
     spot_id = request.args.get('spot_id',type = int)
     lot_id = request.args.get('lot_id',type = int)
+    status = request.args.get('status',type = str)
 
-    if not spot_id or lot_id:
+    if spot_id is None or lot_id is None or status is None:
         flash("Invalid Lot Id or Spot_id")
         return redirect(url_for('admin.dashboard'))
-    
-    status = getParkingSpotStatus(spot_id,lot_id)
 
-    return render_template("admin/viewSpot.html",spot_id,status)
+    if request.method == 'POST':
+        deleteParticularParkingSpot(spot_id,lot_id)
+    
+
+    return render_template("admin/viewSpot.html", spot_id = spot_id, lot_id = lot_id, status = status)
 
     
 
