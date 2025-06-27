@@ -70,7 +70,8 @@ def createReserveParkingSpot():
                 parking_timestamp DATETIME NOT NULL,
                 leaving_timestamp DATETIME,
                 parking_cost_per_unit_time REAL,
-
+                vehicle_number TEXT,
+                
                 FOREIGN KEY (spot_id) REFERENCES PARKINGSPOTS(spot_id),
                 FOREIGN KEY (user_id) REFERENCES USERS(Id)
                 );
