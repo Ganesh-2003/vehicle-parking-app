@@ -124,7 +124,7 @@ def viewSpot():
 
     if request.method == 'POST':
         deleteParticularParkingSpot(spot_id,lot_id)
-    
+        return redirect(url_for('admin.dashboard'))
 
     return render_template("admin/viewSpot.html", spot_id = spot_id, lot_id = lot_id, status = status)
 
