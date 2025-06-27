@@ -117,6 +117,7 @@ def viewSpot():
     spot_id = request.args.get('spot_id',type = int)
     lot_id = request.args.get('lot_id',type = int)
     status = request.args.get('status',type = str)
+    print(status)
 
     if spot_id is None or lot_id is None or status is None:
         flash("Invalid Lot Id or Spot_id")

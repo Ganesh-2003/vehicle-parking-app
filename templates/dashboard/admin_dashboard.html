@@ -22,9 +22,9 @@
       <div class="spot">
         {% for spot in lot.spots %}
           {% if spot[2] == 'O' %}
-            <div onclick="window.location.href='/admin/viewSpot?spot_id={{ spot[0] }}&lot_id={{ lot.lot[0] }}&status={{ spot[2] }}'" class="Occupied">O</div>
+            <div onclick="window.location.href='/admin/viewSpot?spot_id={{ spot[1] }}&lot_id={{ lot.lot[0] }}&status={{ spot[2] }}'" class="Occupied">O</div>
           {% else %}
-            <div onclick="window.location.href='/admin/viewSpot?spot_id={{ spot[0] }}&lot_id={{ lot.lot[0] }}&status={{ spot[2] }}'" class="available">A</div>
+            <div onclick="window.location.href='/admin/viewSpot?spot_id={{ spot[1] }}&lot_id={{ lot.lot[0] }}&status={{ spot[2] }}'" class="available">A</div>
           {% endif %}
         {% endfor %}
       </div>

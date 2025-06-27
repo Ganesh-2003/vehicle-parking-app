@@ -8,14 +8,14 @@ def create_user_table():
 
     cur.execute(
         '''
-        CREATE TABLE IF NOT EXISTS USERS (
-            ID INTEGER PRIMARY KEY AUTOINCREMENT,
-            EMAIL TEXT NOT NULL UNIQUE,
-            PASSWORD TEXT NOT NULL,
-            FULLNAME TEXT NOT NULL,
-            ADDRESS TEXT NOT NULL,
-            PINCODE TEXT NOT NULL,
-            ROLE TEXT DEFAULT 'user'
+        CREATE TABLE IF NOT EXISTS Users (
+            user_id INTEGER PRIMARY KEY AUTOINCREMENT,
+            email Text NOT NULL UNIQUE,
+            password Text NOT NULL,
+            name Text NOT NULL,
+            address Text NOT NULL,
+            pincode Text NOT NULL,
+            role Text DEFAULT 'user'
         )
         '''
     )
@@ -25,11 +25,11 @@ def create_user_table():
         hashed_password = bcrypt.hashpw("admin@123".encode('utf-8'), bcrypt.gensalt())
         cur.execute(
             '''
-                INSERT INTO USERS (EMAIL, PASSWORD, FULLNAME, ADDRESS, PINCODE, ROLE) VALUES (?,?,?,?,?,?) 
+                INSERT INTO USERS (email, password, name, address, pincode, role) VALUES (?,?,?,?,?,?) 
             ''',('admin@parking.com', hashed_password, 'Admin', 'Chennai', '123456', 'admin')
         )
 
-        print("Admin Created with EMAIL - admin@parking.com and PASSWORD - admin@123")
+        print("Admin Created with Email - admin@parking.com and PASSWORD - admin@123")
 
     connection.commit()
     connection.close()
@@ -41,7 +41,7 @@ def check_user(email):
     cur = connection.cursor()
     res = cur.execute(
         '''    
-            SELECT EMAIL FROM USERS where EMAIL=?
+            SELECT email FROM USERS where email=?
         ''', (email,)
     )
 
@@ -61,7 +61,7 @@ def register_user(email, hashedpassword, fullname, address, pincode):
     cur = connection.cursor()
     res = cur.execute(
         '''
-            INSERT INTO USERS (EMAIL, PASSWORD, FULLNAME, ADDRESS, PINCODE) VALUES (?,?,?,?,?)
+            INSERT INTO users (email, password, name, address, pincode) VALUES (?,?,?,?,?)
         ''',(email, hashedpassword, fullname, address, pincode)
     )
 
@@ -74,7 +74,7 @@ def fetch_user(email,password):
     cur = connection.cursor()
     cur.execute(
         '''
-            SELECT * FROM USERS WHERE EMAIL = ?
+            SELECT * FROM USERS WHERE email = ?
         ''',(email,)        
     )
 

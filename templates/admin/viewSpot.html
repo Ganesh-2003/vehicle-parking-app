@@ -4,28 +4,29 @@
 
     <div>
         <div class="title">View/Delete Parking Spot</div>
-        <form method="post" action="{{ url_for('admin.viewSpot', lot_id=lot_id,spot_id=spot_id,status=status) }}">
-            <div class = "view-Spot">
-                <div class="field">
-                    <div class = "col-sm-10">
-                    <span class="field-label">ID : </span>
-                        <input class="input-box" type="text" name="spot_id" id="spot_id" value="{{ spot_id }}" readonly>
-                    </div>
+        <form method="post" action="{{ url_for('admin.viewSpot', lot_id=lot_id, spot_id=spot_id, status=status) }}">
+            <div class="view-Spot">
+
+                <!-- ID Row -->
+                <div class="field d-flex align-items-center mb-3">
+                    <label for="spot_id" class="me-2"><b>ID:</b></label>
+                    <input class="form-control w-auto" type="text" name="spot_id" id="spot_id" value="{{ spot_id }}" readonly>
                 </div>
-                <br>
-                <div class="field">
-                    <div class = "col-sm-10">
-                    <span class="field-label">Status :</span>
-                        <input class="input-box" type="text" name="status" id="status" value="{{ status }}" readonly>
-                    </div>
+
+                <!-- Status Row -->
+                <div class="field d-flex align-items-center mb-3">
+                    <label for="status" class="me-2"><b>Status:</b></label>
+                    <input class="form-control w-auto" type="text" name="status" id="status" value="{{ status }}" readonly>
                 </div>
-                <br>
-                <div>
-                    {%if status == 'A' %}
+
+                <!-- Buttons -->
+                <div class="mt-3">
+                    {% if status == 'A' %}
                         <button type="submit" class="btn btn-outline-danger"><b>Delete</b></button>
                     {% endif %}
-                        <button type="button"  onclick="window.location.href='/admin/dashboard'" class="btn btn-outline-secondary"><b>Close</b></button>
+                    <button type="button" onclick="window.location.href='/admin/dashboard'" class="btn btn-outline-secondary"><b>Close</b></button>
                 </div>
+
             </div>
         </form>
     </div>

@@ -7,13 +7,13 @@ def createParkingLot():
 
     cur.execute(
         '''
-            CREATE TABLE IF NOT EXISTS PARKINGLOT (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            prime_location_name TEXT NOT NULL,
+            CREATE TABLE IF NOT EXISTS ParkingLot (
+            lot_id INTEGER PRIMARY KEY AUTOINCREMENT,
+            location_name TEXT NOT NULL,
             address TEXT NOT NULL,
             pincode TEXT NOT NULL,
             price INTEGER NOT NULL, 
-            maximum_number_of_spots INTEGER NOT NULL
+            maxSpots INTEGER NOT NULL
         )
         '''
     )
@@ -28,12 +28,13 @@ def insertParkingLot(locationName,address,pincode,pricePerHour,maxSpots):
 
     cur.execute(
         '''
-            INSERT INTO PARKINGLOT (prime_location_name, address, pincode, price, maximum_number_of_spots) VALUES (?,?,?,?,?)
+            INSERT INTO ParkingLot (location_name, address, pincode, price, maxSpots) VALUES (?,?,?,?,?)
         ''',(locationName, address, pincode, pricePerHour, maxSpots)
     )
 
     connection.commit()
     connection.close()
+
     return cur.lastrowid
 
 def createParkingSpots():
@@ -43,12 +44,11 @@ def createParkingSpots():
 
     cur.execute(
         '''
-        CREATE TABLE IF NOT EXISTS PARKINGSPOTS (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        CREATE TABLE IF NOT EXISTS ParkingSpots (
         lot_id INTEGER NOT NULL,
-        status TEXT CHECK(status IN ('O', 'A')) NOT NULL DEFAULT 'A',
         spot_id INTEGER,  -- Optional: to identify spot within a lot
-        FOREIGN KEY (lot_id) REFERENCES PARKINGLOT(id) ON DELETE CASCADE
+        status TEXT CHECK(status IN ('O', 'A')) NOT NULL DEFAULT 'A',
+        FOREIGN KEY (lot_id) REFERENCES ParkingLot(lot_id) ON DELETE CASCADE
         );
     '''
     )
@@ -64,18 +64,37 @@ def createReserveParkingSpot():
     cur.execute(
             '''
                 CREATE TABLE IF NOT EXISTS Reserve_Parking_Spot (
-                id INTEGER PRIMARY KEY AUTOINCREMENT,
                 spot_id INTEGER NOT NULL,
+                lot_id INTEGER NOT NULL,
                 user_id INTEGER NOT NULL,
                 parking_timestamp DATETIME NOT NULL,
                 leaving_timestamp DATETIME,
-                parking_cost_per_unit_time REAL,
-                vehicle_number TEXT,
-                
-                FOREIGN KEY (spot_id) REFERENCES PARKINGSPOTS(spot_id),
+                parking_cost REAL,
+
+                FOREIGN KEY (lot_id)  REFERENCES ParkingLot(lot_id)
+                FOREIGN KEY (spot_id) REFERENCES ParkingSpots(spot_id),
                 FOREIGN KEY (user_id) REFERENCES USERS(Id)
                 );
             '''
+    )
+
+    connection.commit()
+    connection.close()
+
+def createVehiclesTable():
+
+    connection = sqlite3.connect(DATABASE_PARKING)
+    cur = connection.cursor()
+
+    cur.execute(
+        '''
+            CREATE TABLE IF NOT EXISTS Vehicle (
+                user_id INTEGER NOT NULL,
+                vehicle_number TEXT NOT NULL,
+    
+                FOREIGN KEY (user_id) REFERENCES Users(user_id)
+            );
+        '''
     )
 
     connection.commit()
@@ -88,7 +107,7 @@ def insertParkingSpots(lot_id, i):
 
     cur.execute(
         '''
-            INSERT INTO PARKINGSPOTS (lot_id, status, spot_id) VALUES (?,?,?) 
+            INSERT INTO ParkingSpots (lot_id, status, spot_id) VALUES (?,?,?) 
         ''',(lot_id, 'A', i)
     )
 
@@ -100,7 +119,7 @@ def get_all_parking_lots():
     connection = sqlite3.connect(DATABASE_PARKING)
     cur = connection.cursor()
 
-    cur.execute(''' Select * from PARKINGLOT ''')
+    cur.execute(''' Select * from ParkingLot ''')
     lots = cur.fetchall()
 
     connection.commit()
@@ -114,7 +133,7 @@ def get_all_parking_spots(lot_id):
     cur = connection.cursor()
 
     cur.execute('''
-                    Select * from PARKINGSPOTS where lot_id = (?)
+                    Select * from ParkingSpots where lot_id = (?)
                 ''', (lot_id,))
     
     spots = cur.fetchall()
@@ -131,7 +150,7 @@ def fetch_parking_lot(lot_id):
 
     cur.execute(
         '''
-            Select * from PARKINGLOT where id = (?)
+            Select * from ParkingLot where lot_id = (?)
         ''',(lot_id,)
     )
 
@@ -147,7 +166,7 @@ def updateParkinglot(locationName,address,pincode,pricePerHour,maxSpots,lot_id):
     connection = sqlite3.connect(DATABASE_PARKING)
     cur = connection.cursor()
     cur.execute('''
-                UPDATE PARKINGLOT SET prime_location_name = ?, address = ?, pincode = ?, price = ?, maximum_number_of_spots = ?
+                UPDATE ParkingLot SET location_name = ?, address = ?, pincode = ?, price = ?, maxSpots = ?
                 WHERE id = ?
             ''',(locationName,address,pincode,pricePerHour,maxSpots,lot_id)
             )
@@ -164,11 +183,11 @@ def deleteParkingLotAndSpot(lot_id):
     cur = connection.cursor()
 
     cur.execute( '''
-                Delete from PARKINGLOT where id = ?
+                Delete from ParkingLot where lot_id = ?
                 ''',(lot_id,))
 
     cur.execute('''
-                    DELETE FROM PARKINGSPOTS where lot_id = ?
+                    DELETE FROM ParkingSpots where lot_id = ?
                 ''',(lot_id,))
 
     connection.commit()
@@ -180,13 +199,13 @@ def deleteParticularParkingSpot(spot_id, lot_id):
     cur = connection.cursor()
 
     cur.execute('''
-                    DELETE FROM PARKINGSPOTS where lot_id = ? AND spot_id = ?
+                    DELETE FROM ParkingSpots where lot_id = ? AND spot_id = ?
                 ''',(lot_id, spot_id))
     
     cur.execute('''
-                    UPDATE PARKINGLOT
-                    SET maximum_number_of_spots = maximum_number_of_spots - 1
-                    WHERE id = ? AND maximum_number_of_spots > 0; 
+                    UPDATE ParkingLot
+                    SET maxSpots = maxSpots - 1
+                    WHERE lot_id = ? AND maxSpots > 0; 
                 ''',(lot_id,))
     
     connection.commit()
