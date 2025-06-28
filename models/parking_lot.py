@@ -81,7 +81,7 @@ def createReserveParkingSpot():
     connection.commit()
     connection.close()
 
-def createVehiclesTable():
+def  createVehiclesTable():
 
     connection = sqlite3.connect(DATABASE_PARKING)
     cur = connection.cursor()
@@ -90,7 +90,7 @@ def createVehiclesTable():
         '''
             CREATE TABLE IF NOT EXISTS Vehicles (
                 user_id INTEGER NOT NULL,
-                vehicle_number TEXT NOT NULL,
+                vehicle_number TEXT NOT NULL UNIQUE,
     
                 FOREIGN KEY (user_id) REFERENCES Users(user_id)
             );
@@ -241,7 +241,26 @@ def insertVehicleDetails(user_id, vehicle_number):
     connection.commit()
     connection.close()
 
+def checkVehicleExists(vehicle_number):
 
+    connection = sqlite3.connect(DATABASE_PARKING)
+    cur = connection.cursor()
+
+    cur.execute(
+        '''
+            select * from Vehicles where vehicle_number = ?
+        ''', (vehicle_number,)
+    )
+
+    result = cur.fetchone()
+
+    connection.commit()
+    connection.close()
+
+    if result:
+        return True
+    else:
+        return False
     
 
 

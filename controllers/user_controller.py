@@ -1,5 +1,6 @@
-from flask import Blueprint, render_template, request, redirect, url_for, flash, session
-from models.users import create_user_table, register_user, check_user, fetch_user, insertVehicleDetails
+from flask import Blueprint, render_template, request, redirect, url_for, flash, session,jsonify
+from models.users import create_user_table, register_user, check_user, fetch_user
+from models.parking_lot import insertVehicleDetails, checkVehicleExists
 import bcrypt
 
 
@@ -17,13 +18,16 @@ def addVehicle():
         user_id = data.get("user_id")
         vehicle_number = data.get("vehicle_number")
 
-        if user_id is None or vehicle_number is None:
-            flash("Please enter all the details", "error")
-            return redirect(url_for('user.addVehicle'))
-        else:
-            insertVehicleDetails(user_id, vehicle_number)
-            return redirect(url_for('user.dashboard'))
+        if not user_id or not vehicle_number:
+            return jsonify({"status": "error", "message": "Please enter all the details"})
+        
+        if (checkVehicleExists(vehicle_number)):
+            return jsonify({"status": "error", "message": "Vehicle Number Already Exists"})
+        
+        insertVehicleDetails(user_id, vehicle_number)
+        return jsonify({"status": "success", "message": "Vehicle added successfully!"})
 
+    #GET Request
     user_id = session['user']
     return render_template("user/add_vehicle.html", user_id = user_id)
     

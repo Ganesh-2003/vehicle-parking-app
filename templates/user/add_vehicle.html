@@ -7,21 +7,21 @@
     <div style="padding: 50px;" class="d-flex justify-content-center align-items-center min-vh-50">
         <form id="lotForm" class="border p-4 bg-gradient rounded-5 shadow" style="width: 100%; max-width: 700px;">
             <div class="row mb-3">
-                <label for="locationName" class="col-sm-2 col-form-label"> User Id:  </label>
+                <label for="userId" class="col-sm-2 col-form-label"> User Id:  </label>
                 <div class="col-sm-10">
                     <input type="text" class="form-control" id="user_id" value="{{ user_id }}" readonly>
                 </div>
             </div>
             <div class="row mb-3">
-                <label for="address" class="col-sm-2 col-form-label"> Vehicle Number </label>
+                <label for="vehicle_number" class="col-sm-2 col-form-label"> Vehicle Number </label>
                 <div class="col-sm-10">
                     <input type="text" class="form-control" id="vehicle_number" required>
                 </div>
             </div>
             
             <span>
-                <button id="update" type="submit" class="btn btn-primary" >Update</button>
-                <button id="cancel" type="button" class="btn btn-primary" onclick="window.location.href='/admin/dashboard'">Cancel</button>
+                <button id="update" type="submit" class="btn btn-primary" ><b> Add </b></button>
+                <button id="cancel" type="button" class="btn btn-primary" onclick="window.location.href='/user/dashboard'"> <b> Cancel </b></button>
             </span>
     </form>
   </div>
@@ -33,7 +33,7 @@
         const user_id = document.getElementById('user_id').value;
         const vehicle_number = document.getElementById('vehicle_number').value;
 
-        const response = await fetch('{{ url_for("admin.addVehicle") }}', {
+        const response = await fetch('{{ url_for("user.addVehicle") }}', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
@@ -46,12 +46,12 @@
 
         const result = await response.json();
         if(result.status == "success") {
-            window.location.href = '{{url_for("admin.dashboard")}}'
+            alert(result.message)
+            window.location.href = '{{url_for("user.dashboard")}}'
         }
         else {
-            alert("Failed to Add Lot")
+            alert(result.message)
         }
-        alert(result.message);  // Show backend response
     });
   </script>
 
