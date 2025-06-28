@@ -88,7 +88,7 @@ def createVehiclesTable():
 
     cur.execute(
         '''
-            CREATE TABLE IF NOT EXISTS Vehicle (
+            CREATE TABLE IF NOT EXISTS Vehicles (
                 user_id INTEGER NOT NULL,
                 vehicle_number TEXT NOT NULL,
     
@@ -226,6 +226,20 @@ def getUsersData():
     connection.close()
 
     return users_data
+
+def insertVehicleDetails(user_id, vehicle_number):
+
+    connection = sqlite3.connect(DATABASE_PARKING)
+    cur = connection.cursor()
+
+    cur.execute(
+        '''
+            INSERT INTO Vehicles (user_id, vehicle_number) VALUES (?,?)
+        ''',(user_id,vehicle_number,)
+    )
+
+    connection.commit()
+    connection.close()
 
 
     
