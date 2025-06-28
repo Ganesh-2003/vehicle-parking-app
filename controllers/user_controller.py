@@ -22,6 +22,7 @@ def addVehicle():
             return redirect(url_for('user.addVehicle'))
         else:
             insertVehicleDetails(user_id, vehicle_number)
+            return redirect(url_for('user.dashboard'))
 
     user_id = session['user']
     return render_template("user/add_vehicle.html", user_id = user_id)
