@@ -8,4 +8,9 @@ user = Blueprint('user',__name__)
 @user.route("/user/dashboard",methods = ['GET','POST'])
 def dashboard():
     return render_template("dashboard/user_dashboard.html")
+
+@user.route("/user/addVehicle", methods = ['GET', 'POST'])
+def addVehicle():
+    
+    return render_template("user/add_vehicle.html")
     
