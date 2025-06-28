@@ -11,6 +11,6 @@ def dashboard():
 
 @user.route("/user/addVehicle", methods = ['GET', 'POST'])
 def addVehicle():
-    
+
     return render_template("user/add_vehicle.html")
     
