@@ -261,7 +261,36 @@ def checkVehicleExists(vehicle_number):
         return True
     else:
         return False
+
+#Method for table below the search box in User configuration
+def get_availabilty_data():
+
+    connection = sqlite3.connect(DATABASE_PARKING)
+    cur = connection.cursor()
+
+    cur.execute( 
+            '''
+                select 
+                pl.lot_id, 
+                pl.address,
+                Count(Case WHEN ps.status = 'A' THEN 1 END) As availabilty 
+                from ParkingLot PL 
+                Left Join 
+                ParkingSpots PS ON PL.lot_id = PS.lot_id
+                Group By
+                PL.lot_id,PL.address
+            '''
+            )   
     
+    result = cur.fetchall()
+    connection.commit()
+    connection.close()
+
+    return result
+
+
+
+
 
 
 

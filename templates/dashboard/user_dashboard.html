@@ -4,4 +4,59 @@
 
     <div class="title"> Recent Parking History </div>
 
+        <table class="table table-striped table-active table-responsive table-css table-bordered ">
+                <thead>
+                    <tr>
+                    <th scope="col">Id</th>
+                    <th scope="col">Location</th>
+                    <th scope="col">Vehicle Number</th>
+                    <th scope="col">TimeStamp</th>
+                    <th scope="col">Action</th>
+                    </tr>
+                </thead>
+                <!-- <tbody>
+                    {% for user in users_data %}
+                        <tr>
+                            <th scope="row">{{ user[0] }}</th>
+                            <td>{{ user[1] }}</td>
+                            <td>{{ user[3] }}</td>
+                            <td>{{ user[4] }}</td>
+                            <td>{{ user[5] }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody> -->
+        </table>
+
+        <hr style="height: 5px; background-color: black; border: none;">
+
+        <div class="center-wrapper">
+            <div class = "search_location">
+                <span>
+                    <h5><b>Search Parking @location/Pincode</b></h5>
+                    <input type="search">
+                </span>
+            </div>
+        </div>
+
+        <table class="table table-striped table-active table-responsive table-css table-bordered ">
+                <thead>
+                    <tr>
+                    <th scope="col">Id</th>
+                    <th scope="col">Address</th>
+                    <th scope="col">Availabilty</th>
+                    <th scope="col">Action</th>
+                    </tr>
+                </thead>
+                <!-- <tbody>
+                    {% for user in users_data %}
+                        <tr>
+                            <th scope="row">{{ user[0] }}</th>
+                            <td>{{ user[1] }}</td>
+                            <td>{{ user[3] }}</td>
+                            <td>{{ user[4] }}</td>
+                            <td>{{ user[5] }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody> -->
+            </table>
 {% endblock %}
