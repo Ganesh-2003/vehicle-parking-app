@@ -1,6 +1,6 @@
 from flask import Blueprint, render_template, request, redirect, url_for, flash, session,jsonify
 from models.users import create_user_table, register_user, check_user, fetch_user
-from models.parking_lot import insertVehicleDetails, checkVehicleExists,get_all_parking_lots
+from models.parking_lot import insertVehicleDetails, checkVehicleExists,get_availability_data
 import bcrypt
 
 
@@ -9,9 +9,9 @@ user = Blueprint('user',__name__)
 @user.route("/user/dashboard",methods = ['GET','POST'])
 def dashboard():
 
-    all_lotsData = get_all_parking_lots()
-
-    return render_template("dashboard/user_dashboard.html")
+    availability_data = get_availability_data()
+    print(availability_data)
+    return render_template("dashboard/user_dashboard.html",availability_data=availability_data)
 
 @user.route("/user/addVehicle", methods = ['GET', 'POST'])
 def addVehicle():

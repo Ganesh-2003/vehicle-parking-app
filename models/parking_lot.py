@@ -263,7 +263,7 @@ def checkVehicleExists(vehicle_number):
         return False
 
 #Method for table below the search box in User configuration
-def get_availabilty_data():
+def get_availability_data():
 
     connection = sqlite3.connect(DATABASE_PARKING)
     cur = connection.cursor()
