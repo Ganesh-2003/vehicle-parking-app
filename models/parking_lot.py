@@ -288,7 +288,22 @@ def get_availability_data():
 
     return result
 
+def fetchOneParkingSpot():
 
+    connection = sqlite3.connect(DATABASE_PARKING)
+    cur = connection.cursor()
+
+    cur.execute(
+                '''
+                    select spot_id from ParkingSpots where lot_id = 1 and status = 'A'
+                '''
+    )
+
+    spot_id = cur.fetchone()
+    connection.commit()
+    connection.close()
+
+    return spot_id
 
 
 
