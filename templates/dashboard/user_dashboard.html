@@ -32,7 +32,7 @@
         <div class="center-wrapper">
             <div class = "search_location">
                 <span>
-                    <h5><b>Search Parking @location/Pincode</b></h5>
+                    <h5><b>Search Parking @location/Pincode: </b></h5>
                     <input type="search">
                 </span>
             </div>
@@ -54,9 +54,10 @@
                             <td>{{ lot[1] }}</td>
                             <td>{{ lot[2] }}</td>
                             <td>
-    
+                                <form method="post" action="{{ url_for ('user.bookSpot') }}">
+                                    <input type="hidden" id="lot_id" value="{{ lot[0] }}"/>
                                     <button type="button" class="btn btn-success"> Book </button>  
-                            
+                                </form>
                         </tr>
                     {% endfor %}
                 </tbody>

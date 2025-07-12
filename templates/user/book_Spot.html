@@ -1,0 +1,48 @@
+{% extends "navbar.html" %}
+
+{% block content %}
+
+    <div class="title"> Book Parking Spot </div>
+
+    <div style="padding: 50px;" class="d-flex justify-content-center align-items-center min-vh-50">
+        <form id="lotForm" class="border p-4 bg-white rounded shadow" style="width: 100%; max-width: 700px;">
+            
+            <div class="row mb-3">
+                <label for="userId" class="col-sm-2 col-form-label">User Id</label>
+                <div class="col-sm-10">
+                    <input type="number" class="form-control" id="userId" value="" >
+                </div>
+            </div>
+            <div class="row mb-3">
+                <label for="locationName" class="col-sm-2 col-form-label">Location Name</label>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" id="locationName" value="" readonly>
+                </div>
+            </div>
+            <div class="row mb-3">
+                <label for="spotId" class="col-sm-2 col-form-label">Spot Id</label>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" id="spotId" value="" readonly>
+                </div>
+            </div>
+            <div class="row mb-3">
+                <label for="lotId" class="col-sm-2 col-form-label">Lot Id</label>
+                <div class="col-sm-10">
+                    <input type="number" class="form-control" id="lotId" value="" readonly>
+                </div>
+            </div>
+            <div class="row mb-3">
+                <label for="vehicleNumber" class="col-sm-2 col-form-label">Vehicle Number</label>
+                <div class="col-sm-10">
+                    <input type="number" class="form-control" id="vehicleNumber" value="" readonly>
+                </div>
+            </div>
+            
+      <span>
+        <button id="update" type="submit" class="btn btn-primary" > Update </button>
+        <button id="cancel" type="button" class="btn btn-primary" onclick="window.location.href='/admin/dashboard'">Cancel</button>
+      </span>
+    </form>
+  </div>
+
+{% endblock %}
