@@ -16,7 +16,7 @@
             <div class="row mb-3">
                 <label for="locationName" class="col-sm-2 col-form-label">Location Name</label>
                 <div class="col-sm-10">
-                    <input type="text" class="form-control" id="locationName" value="" readonly>
+                    <input type="text" class="form-control" id="locationName" value="{{ location_name }}" readonly>
                 </div>
             </div>
             <div class="row mb-3">
@@ -32,15 +32,18 @@
                 </div>
             </div>
             <div class="row mb-3">
-                <label for="vehicleNumber" class="col-sm-2 col-form-label">Vehicle Number</label>
-                <div class="col-sm-10">
-                    <input type="number" class="form-control" id="vehicleNumber" value="" readonly>
-                </div>
+                <label for="vehicle_number">Choose your vehicle:</label>
+                    <select name="vehicle_number" id="vehicle_number">
+                    <option value="" disabled selected>Select a vehicle</option>
+                    {% for number in vehicle_numbers %}
+                        <option value="{{ number }}">{{ number }}</option>
+                    {% endfor %}
+                    </select>
             </div>
             
       <span>
-        <button id="update" type="submit" class="btn btn-primary" > Update </button>
-        <button id="cancel" type="button" class="btn btn-primary" onclick="window.location.href='/admin/dashboard'">Cancel</button>
+        <button id="book" type="submit" class="btn btn-primary" > Book </button>
+        <button id="cancel" type="button" class="btn btn-primary" onclick="window.location.href='/user/dashboard'">Cancel</button>
       </span>
     </form>
   </div>

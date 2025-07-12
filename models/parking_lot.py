@@ -288,15 +288,15 @@ def get_availability_data():
 
     return result
 
-def fetchOneParkingSpot():
+def fetchOneParkingSpot(lot_id):
 
     connection = sqlite3.connect(DATABASE_PARKING)
     cur = connection.cursor()
 
     cur.execute(
                 '''
-                    select spot_id from ParkingSpots where lot_id = 1 and status = 'A'
-                '''
+                    select spot_id from ParkingSpots where lot_id = (?) and status = 'A'
+                ''',(lot_id,)
     )
 
     spot_id = cur.fetchone()
@@ -304,6 +304,23 @@ def fetchOneParkingSpot():
     connection.close()
 
     return spot_id
+
+def fetchVehicleUsers(user_id):
+    
+    connection = sqlite3.connect(DATABASE_PARKING)
+    cur = connection.cursor()
+
+    cur.execute(
+                '''
+                    select vehicle_number from vehicles where user_id = (?)
+                ''',(user_id,)
+    )
+
+    vehicles = cur.fetchall()
+    connection.commit()
+    connection.close()
+
+    return vehicles
 
 
 

@@ -54,6 +54,7 @@ def login():
             flash('Please Enter Correct Credentials')
             return render_template("login.html")
         else:
+            session['user_id'] = user[0]
             session['user'] = email
             session['role'] = user[len(user)-1]
             session['name'] = user[3]

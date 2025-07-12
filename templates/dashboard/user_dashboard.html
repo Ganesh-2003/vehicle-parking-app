@@ -54,10 +54,10 @@
                             <td>{{ lot[1] }}</td>
                             <td>{{ lot[2] }}</td>
                             <td>
-                                <form method="post" action="{{ url_for ('user.bookSpot') }}">
+                                <form method="POST" action="{{ url_for ('user.bookSpot') }}">
                                     <input type="hidden" id="lot_id" value="{{ lot[0] }}"/>
-                                    <input type="hidden" id="locationName" val="{{ lot[1] }}"/>
-                                    <button type="button" class="btn btn-success"> Book </button>  
+                                    <input type="hidden" id="locationName" value="{{ lot[1] }}"/>
+                                    <button type="submit" class="btn btn-success"> Book </button>  
                                 </form>
                         </tr>
                     {% endfor %}

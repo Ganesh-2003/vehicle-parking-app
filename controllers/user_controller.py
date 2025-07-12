@@ -1,6 +1,6 @@
 from flask import Blueprint, render_template, request, redirect, url_for, flash, session,jsonify
 from models.users import create_user_table, register_user, check_user, fetch_user
-from models.parking_lot import insertVehicleDetails, checkVehicleExists,get_availability_data, fetchOneParkingSpot
+from models.parking_lot import insertVehicleDetails, checkVehicleExists,get_availability_data, fetchOneParkingSpot, fetchVehicleUsers
 import bcrypt
 
 
@@ -18,24 +18,32 @@ def bookSpot():
 
     #POST METHOD 
     if request.method == "POST":
+
+        lot_id = request.form.get('lot_Id')
+        location_name = request.form.get('locationName')
+        spot_id = fetchOneParkingSpot(lot_id)
+        user_id = session['user_id']
+        vehicles_user = fetchVehicleUsers(user_id)
+
+        if not vehicles_user:
+            flash("You have no vehicles registered. Please add a vehicle before booking a spot.", "warning")
+            return redirect(url_for('user.addVehicle'))
         
-        return url_for('user.dashboard')
+        return render_template("user/book_Spot.html", 
+                               lot_id=lot_id, 
+                               spot_id=spot_id, 
+                               user_id=user_id, 
+                               location_name = location_name, 
+                               vehicles_user = vehicles_user
+                            )
 
-
-    #GET Method
-
-    lot_id = request.form.get('lot_id')
-    spot_id = fetchOneParkingSpot(lot_id)
-    user_id = session['user']
-
-    return render_template("user/book_Spot.html", lot_id=lot_id, spot_id=spot_id, user_id=user_id)
 
 @user.route("/user/addVehicle", methods = ['GET', 'POST'])
 def addVehicle():
 
     if request.method == 'POST':
         data = request.get_json()
-        user_id = data.get("user_id")
+        user_id = session['user_id']
         vehicle_number = data.get("vehicle_number")
 
         if not user_id or not vehicle_number:
