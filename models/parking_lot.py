@@ -1,4 +1,4 @@
-import sqlite3
+import sqlite3,datetime
 from config import DATABASE_PARKING
 
 def createParkingLot():
@@ -323,6 +323,41 @@ def fetchVehicleUsers(user_id):
 
     return vehicles
 
+def insertReserveParkingSpot(spot_id, lot_id, user_id, vehicle_number):
+
+    connection = sqlite3.connect(DATABASE_PARKING)
+    cur = connection.cursor()
+
+    parking_timeStamp = datetime.datetime.now()
+
+    cur.execute(
+                '''
+        INSERT INTO Reserve_Parking_Spot (
+            spot_id,
+            lot_id,
+            user_id,
+            vehicle_number,
+            parking_timestamp,
+            parking_cost
+        ) VALUES (?, ?, ?, ?, ?, ?)
+    ''',(spot_id,lot_id,user_id,vehicle_number,parking_timeStamp,None)
+    )
+
+    connection.commit()
+    connection.close()
+
+
+def updateParkingSpotStatus(spot_id, lot_id, status):
+
+    connection = sqlite3.connect(DATABASE_PARKING)
+    cur = connection.cursor()
+
+    cur.execute('''
+                    UPDATE ParkingSpots SET status=(?) where spot_id=(?) AND lot_id(?)
+                ''',(status,spot_id,lot_id))
+    
+    connection.commit()
+    connection.close()
 
 
 

@@ -1,6 +1,6 @@
 from flask import Blueprint, render_template, request, redirect, url_for, flash, session,jsonify
 from models.users import create_user_table, register_user, check_user, fetch_user
-from models.parking_lot import insertVehicleDetails, checkVehicleExists,get_availability_data, fetchOneParkingSpot, fetchVehicleUsers
+from models.parking_lot import insertVehicleDetails, checkVehicleExists,get_availability_data, fetchOneParkingSpot, fetchVehicleUsers, insertReserveParkingSpot, updateParkingSpotStatus
 import bcrypt
 
 
@@ -67,4 +67,30 @@ def addVehicle():
     #GET Request
     user_id = session['user']
     return render_template("user/add_vehicle.html", user_id = user_id)
+
+@user.route('/user/confirmBooking', methods = ['GET','POST'])
+def confirmBooking():
+
+    if request.method == 'POST':
+        data  = request.get_json()
+        locationName = data.get('locationName')
+        user_id = data.get('user_id')
+        lot_id = data.get('lot_id')
+        spot_id = data.get('spot_id')
+        vehicle_number = data.get('vehicle_number')
+        status = 'B'
+
+        if not locationName or not user_id or not lot_id or not spot_id or not vehicle_number:
+            flash("Something went wrong","error")
+            return redirect(url_for('user.dashboard'))
+
+        else:
+            insertReserveParkingSpot(spot_id, lot_id, user_id, vehicle_number)
+            updateParkingSpotStatus(spot_id,lot_id,status)
+        
+        return jsonify({
+            "status": "success",
+            "message": "Booking Successfull"
+        }),200
+
     
