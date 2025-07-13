@@ -67,6 +67,7 @@ def createReserveParkingSpot():
                 spot_id INTEGER NOT NULL,
                 lot_id INTEGER NOT NULL,
                 user_id INTEGER NOT NULL,
+                vehicle_number TEXT NOT NULL,
                 parking_timestamp DATETIME NOT NULL,
                 leaving_timestamp DATETIME,
                 parking_cost REAL,
