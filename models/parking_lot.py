@@ -167,7 +167,8 @@ def updateParkinglot(locationName,address,pincode,pricePerHour,maxSpots,lot_id):
     connection = sqlite3.connect(DATABASE_PARKING)
     cur = connection.cursor()
     cur.execute('''
-                UPDATE ParkingLot SET location_name = ?, address = ?, pincode = ?, price = ?, maxSpots = ?
+                UPDATE ParkingLot 
+                SET location_name = ?, address = ?, pincode = ?, price = ?, maxSpots = ?
                 WHERE id = ?
             ''',(locationName,address,pincode,pricePerHour,maxSpots,lot_id)
             )
@@ -200,7 +201,8 @@ def deleteParticularParkingSpot(spot_id, lot_id):
     cur = connection.cursor()
 
     cur.execute('''
-                    DELETE FROM ParkingSpots where lot_id = ? AND spot_id = ?
+                    DELETE FROM ParkingSpots 
+                    where lot_id = ? AND spot_id = ?
                 ''',(lot_id, spot_id))
     
     cur.execute('''
@@ -296,7 +298,8 @@ def fetchOneParkingSpot(lot_id):
 
     cur.execute(
                 '''
-                    select spot_id from ParkingSpots where lot_id = (?) and status = 'A'
+                    select spot_id from ParkingSpots 
+                    where lot_id = (?) and status = 'A'
                 ''',(lot_id,)
     )
 
@@ -353,8 +356,11 @@ def updateParkingSpotStatus(spot_id, lot_id, status):
     cur = connection.cursor()
 
     cur.execute('''
-                    UPDATE ParkingSpots SET status=(?) where spot_id=(?) AND lot_id(?)
-                ''',(status,spot_id,lot_id))
+                    UPDATE ParkingSpots 
+                    SET status=(?) 
+                    where spot_id=(?) AND lot_id = (?)
+                ''',(status,spot_id,lot_id)
+                )
     
     connection.commit()
     connection.close()
