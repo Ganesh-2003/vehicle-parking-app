@@ -1,6 +1,6 @@
 from flask import Blueprint, render_template, request, redirect, url_for, flash, session,jsonify
 from models.users import create_user_table, register_user, check_user, fetch_user
-from models.parking_lot import insertVehicleDetails, checkVehicleExists,get_availability_data, fetchOneParkingSpot, fetchVehicleUsers, insertReserveParkingSpot, updateParkingSpotStatus
+from models.parking_lot import insertVehicleDetails, checkVehicleExists,get_availability_data, fetchOneParkingSpot, fetchVehicleUsers, insertReserveParkingSpot, updateParkingSpotStatus, getReserveParkingSpotData
 import bcrypt
 
 
@@ -9,9 +9,15 @@ user = Blueprint('user',__name__)
 @user.route("/user/dashboard",methods = ['GET','POST'])
 def dashboard():
 
+    user_id = session['user_id']
+    user_parking_data = getReserveParkingSpotData(user_id)
+  
     availability_data = get_availability_data()
+
+    print(user_parking_data)
     print(availability_data)
-    return render_template("dashboard/user_dashboard.html",availability_data=availability_data)
+    
+    return render_template("dashboard/user_dashboard.html",availability_data=availability_data, user_parking_data = user_parking_data)
 
 @user.route("/user/bookSpot", methods = ['GET','POST'])
 def bookSpot():
@@ -78,7 +84,7 @@ def confirmBooking():
         lot_id = data.get('lot_id')
         spot_id = data.get('spot_id')
         vehicle_number = data.get('vehicle_number')
-        status = 'B'
+        status = 'O'
 
         if not locationName or not user_id or not lot_id or not spot_id or not vehicle_number:
             flash("Something went wrong","error")

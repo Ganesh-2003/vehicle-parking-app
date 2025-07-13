@@ -365,9 +365,33 @@ def updateParkingSpotStatus(spot_id, lot_id, status):
     connection.commit()
     connection.close()
 
+def getReserveParkingSpotData(user_id):
 
+    connection = sqlite3.connect(DATABASE_PARKING)
+    cur = connection.cursor()
 
+    cur.execute('''
+                    select rp.spot_id,
+                        pl.address AS location_name,
+                        rp.vehicle_number,
+                        rp.parking_timestamp,
+                        ps.status
+                        from Reserve_Parking_Spot rp 
+                    JOIN
+                        ParkingLot pl on pl.lot_id = rp.lot_id 
+                    JOIN 
+                        ParkingSpots ps on rp.spot_id = ps.spot_id AND rp.lot_id = ps.lot_id
+                    where 
+                        rp.user_id = (?)
+                ''',(user_id)
+                )
+    
+    result = cur.fetchall()
 
+    connection.commit()
+    connection.close()
+
+    return result
 
 
 
