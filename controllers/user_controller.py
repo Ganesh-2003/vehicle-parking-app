@@ -19,11 +19,20 @@ def bookSpot():
     #POST METHOD 
     if request.method == "POST":
 
-        lot_id = request.form.get('lot_Id')
+        lot_id = request.form.get('lot_id')
         location_name = request.form.get('locationName')
         spot_id = fetchOneParkingSpot(lot_id)
         user_id = session['user_id']
         vehicles_user = fetchVehicleUsers(user_id)
+
+        #used for processing vehicles list
+        print(vehicles_user)
+        vehicles_list = []
+        for vehicle in vehicles_user:
+            print(vehicle)
+            vehicles_list.append(vehicle[0])
+        
+        print(vehicles_list)
 
         if not vehicles_user:
             flash("You have no vehicles registered. Please add a vehicle before booking a spot.", "warning")
@@ -34,7 +43,7 @@ def bookSpot():
                                spot_id=spot_id, 
                                user_id=user_id, 
                                location_name = location_name, 
-                               vehicles_user = vehicles_user
+                               vehicles_user = vehicles_list
                             )
 
 

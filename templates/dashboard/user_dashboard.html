@@ -55,8 +55,8 @@
                             <td>{{ lot[2] }}</td>
                             <td>
                                 <form method="POST" action="{{ url_for ('user.bookSpot') }}">
-                                    <input type="hidden" id="lot_id" value="{{ lot[0] }}"/>
-                                    <input type="hidden" id="locationName" value="{{ lot[1] }}"/>
+                                    <input type="hidden" name="lot_id" value="{{ lot[0] }}"/>
+                                    <input type="hidden" name="locationName" value="{{ lot[1] }}"/>
                                     <button type="submit" class="btn btn-success"> Book </button>  
                                 </form>
                         </tr>

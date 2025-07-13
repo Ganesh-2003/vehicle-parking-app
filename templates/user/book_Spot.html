@@ -5,47 +5,85 @@
     <div class="title"> Book Parking Spot </div>
 
     <div style="padding: 50px;" class="d-flex justify-content-center align-items-center min-vh-50">
-        <form id="lotForm" class="border p-4 bg-white rounded shadow" style="width: 100%; max-width: 700px;">
+        <form id="lotForm" class="border p-4 bg-white rounded shadow" style="width: 100%; max-width: 600px;">
             
             <div class="row mb-3">
-                <label for="userId" class="col-sm-2 col-form-label">User Id</label>
-                <div class="col-sm-10">
-                    <input type="number" class="form-control" id="userId" value="{{ user_id }}" >
-                </div>
-            </div>
-            <div class="row mb-3">
-                <label for="locationName" class="col-sm-2 col-form-label">Location Name</label>
+                <label for="locationName" class="col-sm-2 col-form-label">Location Name:</label>
                 <div class="col-sm-10">
                     <input type="text" class="form-control" id="locationName" value="{{ location_name }}" readonly>
                 </div>
             </div>
+
             <div class="row mb-3">
-                <label for="spotId" class="col-sm-2 col-form-label">Spot Id</label>
+                <label for="userId" class="col-sm-2 col-form-label">User Id :</label>
                 <div class="col-sm-10">
-                    <input type="text" class="form-control" id="spotId" value="{{ spot_id }}" readonly>
+                    <input type="number" class="form-control" id="userId" value="{{ user_id }}" readonly>
+                </div>
+            </div>
+            
+            <div class="row mb-3">
+                <label for="spotId" class="col-sm-2 col-form-label">Spot Id :</label>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" id="spotId" value="{{ spot_id[0] }}" readonly>
                 </div>
             </div>
             <div class="row mb-3">
-                <label for="lotId" class="col-sm-2 col-form-label">Lot Id</label>
+                <label for="lotId" class="col-sm-2 col-form-label">Lot Id :</label>
                 <div class="col-sm-10">
                     <input type="number" class="form-control" id="lotId" value="{{ lot_id }}" readonly>
                 </div>
             </div>
-            <div class="row mb-3">
-                <label for="vehicle_number">Choose your vehicle:</label>
-                    <select name="vehicle_number" id="vehicle_number">
+            
+            <div class="d-flex align-items-center mb-4">
+                <label for="vehicle_number" class="me-2 mb-0" style="width: 160px;">Choose your vehicle:</label>
+                <select name="vehicle_number" id="vehicleNumber" class="form-select w-auto" required>
                     <option value="" disabled selected>Select a vehicle</option>
-                    {% for number in vehicle_numbers %}
-                        <option value="{{ number }}">{{ number }}</option>
+                    {% for vehicle in vehicles_user %}
+                        <option value="{{ vehicle }}">{{ vehicle }}</option>
                     {% endfor %}
-                    </select>
+                </select>
             </div>
             
       <span>
-        <button id="book" type="submit" class="btn btn-primary" > Book </button>
-        <button id="cancel" type="button" class="btn btn-primary" onclick="window.location.href='/user/dashboard'">Cancel</button>
+        <button id="book" type="submit" class="btn btn-success" > Book </button>
+        <button id="cancel" type="button" class="btn btn-danger" onclick="window.location.href='/user/dashboard'">Cancel</button>
       </span>
     </form>
   </div>
+
+  <script >
+    document.getElementbyID('lotForm').addEventListener('submit', async function (e) {
+        e.preventDefault();
+
+        const locationName = document.getElementById('locationName').value;
+        const user_id = document.getElementById('userId').value;
+        const lot_id = document.getElementById('lotId').value;
+        const spot_id = document.getElementById('spotId').value;
+        const vehicle_number = document.getElementbyID('vehicleNumber').value;
+        
+        const response = await fetch('{{ url_for("user.confirmBooking")}}',{
+            method: 'POST',
+            headers:{
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                locationName: locationName,
+                user_id: user_id,
+                lot_id: lot_id,
+                spot_id: spot_id,
+                vehicle_number: vehicle_number
+            })
+        });
+
+        const result = await response.json();
+        if(result.status == "success") {
+            alert(result.message)
+            window.location.href = '{{url_for("user.dashboard")}}'
+        }
+        else {
+            alert(result.message)
+        }
+    })
+  </script>
 
 {% endblock %}

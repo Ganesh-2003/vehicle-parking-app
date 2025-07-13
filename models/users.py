@@ -86,3 +86,4 @@ def fetch_user(email,password):
             return user
 
     return None
+
