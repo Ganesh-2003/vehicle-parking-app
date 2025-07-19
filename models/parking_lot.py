@@ -167,9 +167,12 @@ def updateParkinglot(locationName,address,pincode,pricePerHour,maxSpots,lot_id):
     connection = sqlite3.connect(DATABASE_PARKING)
     cur = connection.cursor()
 
-    cur.execute ("Select maxSpots from ParkingLot where lot_id=?",(lot_id))
+    cur.execute ('''
+                    Select maxSpots from ParkingLot where lot_id = (?)
+                 ''',(lot_id,))
+    
     old_maxSpots = cur.fetchone()[0]
-
+   
     cur.execute('''
                 UPDATE ParkingLot 
                 SET location_name = ?, address = ?, pincode = ?, price = ?, maxSpots = ?
@@ -181,7 +184,38 @@ def updateParkinglot(locationName,address,pincode,pricePerHour,maxSpots,lot_id):
     updated_rows = cur.rowcount
     print("Rows updated:", updated_rows)
     
-    if old_maxSpots < maxSpots:
+    if old_maxSpots < int(maxSpots):
+
+        newSpotsAdded = int(maxSpots) - old_maxSpots
+
+        for i in range(old_maxSpots+1, int(maxSpots)+1):
+            cur.execute('''
+                            INSERT INTO PARKINGSPOTS VALUES(?,?,?)
+                        ''',(lot_id, i,'A'))
+        
+    elif old_maxSpots > int(maxSpots):
+
+        spots_to_remove = old_maxSpots - int(maxSpots)  
+
+        # Count currently occupied spots
+        cur.execute("SELECT COUNT(*) FROM ParkingSpots WHERE lot_id = ? AND status = 'O'", (lot_id,))
+        occupied_spots = cur.fetchone()[0]
+
+        # The new max cannot go below the number of occupied spots
+        final_max = max(int(maxSpots), occupied_spots)
+         
+        cur.execute('''
+            WITH to_delete AS (
+                SELECT spot_id FROM ParkingSpots
+                WHERE lot_id = ? AND status = 'A'
+                ORDER BY spot_id
+                LIMIT ?
+            )
+            DELETE FROM ParkingSpots
+            WHERE lot_id = ? AND spot_id IN (SELECT spot_id FROM to_delete);
+            ''', (lot_id, spots_to_remove, lot_id))
+        
+        cur.execute("UPDATE ParkingLot SET maxSpots = ? WHERE lot_id = ?", (final_max, lot_id))
 
     
     connection.commit()
