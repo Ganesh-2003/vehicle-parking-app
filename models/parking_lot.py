@@ -331,10 +331,11 @@ def insertReserveParkingSpot(spot_id, lot_id, user_id, vehicle_number):
     connection = sqlite3.connect(DATABASE_PARKING)
     cur = connection.cursor()
 
-    parking_timeStamp = datetime.datetime.now()
+    parking_timeStamp = datetime.datetime.now().strftime("%Y-%m-%d %H:%M")
+    
 
     cur.execute(
-                '''
+        '''
         INSERT INTO Reserve_Parking_Spot (
             spot_id,
             lot_id,
@@ -343,7 +344,7 @@ def insertReserveParkingSpot(spot_id, lot_id, user_id, vehicle_number):
             parking_timestamp,
             parking_cost
         ) VALUES (?, ?, ?, ?, ?, ?)
-    ''',(spot_id,lot_id,user_id,vehicle_number,parking_timeStamp,None)
+        ''', (spot_id, lot_id, user_id, vehicle_number, parking_timeStamp, None)
     )
 
     connection.commit()
@@ -369,7 +370,7 @@ def getReserveParkingSpotData(user_id):
 
     connection = sqlite3.connect(DATABASE_PARKING)
     cur = connection.cursor()
-
+    print(user_id)
     cur.execute('''
                     select rp.spot_id,
                         pl.address AS location_name,
@@ -383,7 +384,7 @@ def getReserveParkingSpotData(user_id):
                         ParkingSpots ps on rp.spot_id = ps.spot_id AND rp.lot_id = ps.lot_id
                     where 
                         rp.user_id = (?)
-                ''',(user_id)
+                ''',(user_id,)
                 )
     
     result = cur.fetchall()

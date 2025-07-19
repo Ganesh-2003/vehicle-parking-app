@@ -33,7 +33,7 @@ def dashboard():
             "spots": spots,
             "total": total,
             "occupied": occupied,
-            "available": available
+            "available": available,
         })
 
     print(all_parking_lots)

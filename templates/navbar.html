@@ -17,7 +17,7 @@
 
   {% if session.get('role') == 'admin' %}
   <div
-  style="align-items: center; justify-content: center;"
+  style="align-items: center; justify-content: center; font-weight: bold;"
   class="collapse navbar-collapse" id="navbarSupportedContent">
     <ul class="navbar-nav mr-auto">
       <li class="nav-item active">
@@ -37,11 +37,12 @@
       </li>
     </ul>
   </div>
+
   {% endif %}
 
   {% if session.get('role') == 'user' %}
   <div
-  style="align-items: center; justify-content: center;"
+  style="align-items: center; justify-content: center; font-weight: bold;"
   class="collapse navbar-collapse" id="navbarSupportedContent">
     <ul class="navbar-nav mr-auto">
       <li class="nav-item active">
@@ -55,10 +56,9 @@
       </li>
     </ul>
   </div>
-  {% endif %}
 
-  <div
-  style= "justify-content: right;"
+    <div
+  style= "justify-content: right; font-weight: bold;"
   class="collapse navbar-collapse" id="navbarSupportedContent">
     <ul class="navbar-nav mr-auto">
       <li class="nav-item active">
@@ -69,8 +69,23 @@
       </li>
     </ul>
   </div>
+  {% endif %}
+
   
 </nav>
+
+<!-- Global flash messages -->
+{% with messages = get_flashed_messages(with_categories=true) %}
+  {% if messages %}
+    <div class="container mt-3">
+      {% for category, message in messages %}
+        <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+          {{ message }}
+        </div>
+      {% endfor %}
+    </div>
+  {% endif %}
+{% endwith %}
   {% block content %} {% endblock %}
 </body>
 </html>

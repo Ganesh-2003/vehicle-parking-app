@@ -4,7 +4,7 @@
 
     <div class="title"> Recent Parking History </div>
 
-        <table class="table table-striped table-active table-responsive table-css table-bordered ">
+        <table style="text-align: center;" class="table table-striped table-css table-bordered ">
                 <thead>
                     <tr>
                     <th scope="col">Id</th>
@@ -17,14 +17,17 @@
                 <tbody>
                     {% for parking in user_parking_data %}
                         <tr>
-                            <th scope="row">{{ parking[0] }}</th>
+                            <td scope="row">{{ parking[0] }}</td>
                             <td>{{ parking[1] }}</td>
                             <td>{{ parking[2] }}</td>
                             <td>{{ parking[3] }}</td>
                             {% if parking[4] == 'O' %}
-                                <td><button type="submit" class="btn btn-danger"> Release Out </button></td>
+                                <td>
+                                    <form>
+                                        <button type="submit" class="btn btn-danger"><b> Release Out </b></button></td>
+                                    </form>
                             {% else %}
-                                <td><button type="submit" class="btn btn-success"> Parked Out </button></td>
+                                <td><button type="submit" class="btn btn-success"><b> Parked Out </b></button></td>
                             {% endif %}
                         </tr>
                     {% endfor %}
@@ -37,16 +40,16 @@
             <div class = "search_location">
                 <span>
                     <h5><b>Search Parking @location/Pincode: </b></h5>
-                    <input type="search">
+                    <input type="text" id="searchInput" onkeyup="filterTable()">
                 </span>
             </div>
         </div>
 
-        <table style="text-align: center;" class="table table-striped table-css table-bordered ">
+        <table id="dataTable" style="text-align: center;" class="table table-striped table-css table-bordered ">
                 <thead>
                     <tr>
                         <th scope="col">Id</th>
-                        <th scope="col">Address</th>
+                        <th scope="col">Location</th>
                         <th scope="col">Availabilty</th>
                         <th scope="col">Action</th>
                     </tr>
@@ -54,7 +57,7 @@
                 <tbody>
                     {% for lot in availability_data %}
                         <tr>
-                            <th scope="row">{{ lot[0] }}</th>
+                            <td scope="row">{{ lot[0] }}</td>
                             <td>{{ lot[1] }}</td>
                             <td>{{ lot[2] }}</td>
                             <td>
@@ -67,4 +70,42 @@
                     {% endfor %}
                 </tbody>
             </table>
+
+            <script>
+                function filterTable()
+                {
+                    const input = document.getElementById("searchInput");
+                    const filterText = input.value.toLowerCase();
+                    const table = document.getElementById("dataTable");
+                    const tr = table.getElementsByTagName("tr");
+                    
+                    for(let i=1;i<tr.length;i++)
+                    {
+                        let show = false;
+                        const td = tr[i].getElementsByTagName("td")[1];
+                        console.log(td)
+
+                        // for(let j = 0;j<td.length;j++)
+                        // {
+                        //     const cell = td[j];
+                        //     if(cell && cell.innerText.toLowerCase().includes(filterText)) {
+                        //         show = true;
+                        //         break;
+                        //     }
+                        // }
+
+                        if(td) {
+                            const txtValue = td.textContent || td.innerText;
+                            if(txtValue.toLowerCase().includes(filterText)) {
+                                tr[i].style.display = "";
+                            }
+                            else{
+                                tr[i].style.display = "none";
+                            }
+                        }
+
+                        //tr[i].style.display = show ? "" : "none";
+                    }
+                }
+            </script>
 {% endblock %}
