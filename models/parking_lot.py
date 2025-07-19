@@ -166,15 +166,24 @@ def updateParkinglot(locationName,address,pincode,pricePerHour,maxSpots,lot_id):
 
     connection = sqlite3.connect(DATABASE_PARKING)
     cur = connection.cursor()
+
+    cur.execute ("Select maxSpots from ParkingLot where lot_id=?",(lot_id))
+    old_maxSpots = cur.fetchone()[0]
+
     cur.execute('''
                 UPDATE ParkingLot 
                 SET location_name = ?, address = ?, pincode = ?, price = ?, maxSpots = ?
-                WHERE id = ?
+                WHERE lot_id = ?
             ''',(locationName,address,pincode,pricePerHour,maxSpots,lot_id)
             )
+    
     print(lot_id)
     updated_rows = cur.rowcount
     print("Rows updated:", updated_rows)
+    
+    if old_maxSpots < maxSpots:
+
+    
     connection.commit()
     connection.close()
     return updated_rows  # Returns the number of rows updated, should be 1 if successful

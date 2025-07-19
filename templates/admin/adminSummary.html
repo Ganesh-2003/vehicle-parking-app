@@ -1,0 +1,117 @@
+{% extends "navbar.html" %}
+
+{% block content %}
+
+<div class="container mt-4">
+    <h2 class="mb-4">Parking Summary</h2>
+
+    <div class="row mb-3">
+        <div class="col-md-6">
+            <div class="card p-3 text-center">
+                <h5>Total Parking Lots</h5>
+                <h3>{{ total_lots or 0 }}</h3>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card p-3 text-center">
+                <h5>Total Parking Spots</h5>
+                <h3>{{ total_spots or 0 }}</h3>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-6 mb-3">
+            <canvas id="statusChart"></canvas>
+        </div>
+        <div class="col-md-6 mb-3">
+            <canvas id="lotChart"></canvas>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    // Parse data safely from JSON
+    let statusLabels, statusData, lotLabels, lotData;
+    
+    try {
+        const statusSummary = JSON.parse('{{ status_summary | tojson | safe }}');
+        statusLabels = statusSummary ? Object.keys(statusSummary) : [];
+        statusData = statusSummary ? Object.values(statusSummary) : [];
+    } catch (e) {
+        statusLabels = [];
+        statusData = [];
+    }
+    
+    try {
+        const lotSpotData = JSON.parse('{{ lot_spot_data | tojson | safe }}');
+        lotLabels = lotSpotData ? lotSpotData.map(item => item[0]) : [];
+        lotData = lotSpotData ? lotSpotData.map(item => item[1]) : [];
+    } catch (e) {
+        lotLabels = [];
+        lotData = [];
+    }
+
+    // Status Pie Chart
+    const statusCtx = document.getElementById('statusChart').getContext('2d');
+    if (statusLabels.length > 0 && statusData.length > 0) {
+        new Chart(statusCtx, {
+            type: 'pie',
+            data: {
+                labels: statusLabels,
+                datasets: [{
+                    label: 'Spots by Status',
+                    data: statusData,
+                    backgroundColor: ['#28a745', '#dc3545'] // Green: Available, Red: Occupied
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    title: {
+                        display: true,
+                        text: 'Parking Spots by Status'
+                    }
+                }
+            }
+        });
+    } else {
+        // Display message when no data
+        statusCtx.font = '16px Arial';
+        statusCtx.fillText('No data available', 10, 50);
+    }
+
+    // Spots Per Lot Bar Chart
+    const lotCtx = document.getElementById('lotChart').getContext('2d');
+    if (lotLabels.length > 0 && lotData.length > 0) {
+        new Chart(lotCtx, {
+            type: 'bar',
+            data: {
+                labels: lotLabels,
+                datasets: [{
+                    label: 'Spots per Lot',
+                    data: lotData,
+                    backgroundColor: '#007bff'
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    y: { beginAtZero: true }
+                },
+                plugins: {
+                    title: {
+                        display: true,
+                        text: 'Parking Spots per Lot'
+                    }
+                }
+            }
+        });
+    } else {
+        // Display message when no data
+        lotCtx.font = '16px Arial';
+        lotCtx.fillText('No data available', 10, 50);
+    }
+</script>
+{% endblock %}

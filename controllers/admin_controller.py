@@ -1,3 +1,5 @@
+import sqlite3
+from config import DATABASE_PARKING
 from flask import Blueprint, render_template, request, redirect, url_for, flash, session,jsonify
 from models.parking_lot import insertParkingLot,createParkingSpots, insertParkingSpots, get_all_parking_lots, get_all_parking_spots, fetch_parking_lot, updateParkinglot, deleteParkingLotAndSpot, deleteParticularParkingSpot, getUsersData
 
@@ -136,7 +138,43 @@ def viewUsers():
 
     return render_template("admin/userslist.html",users_data = users_data)
 
+@admin.route("/admin/summary", methods = ['GET','POST'])
+def summary():
     
+    conn = sqlite3.connect(DATABASE_PARKING)
+    cursor = conn.cursor()
+
+    cursor.execute('''
+                        Select count(*) from PARKINGLOT
+                   ''')
+    
+    total_lots = cursor.fetchone()[0]
+
+    cursor.execute('''
+                        Select count(*) from ParkingSpots
+                   ''')
+    
+    total_spots = cursor.fetchone()[0]
+
+    cursor.execute("SELECT status, COUNT(*) FROM ParkingSpots GROUP BY status")
+
+    status_data = cursor.fetchall()
+    status_summary = {status: count for status, count in status_data}
+
+    cursor.execute("""
+        SELECT lot_id, COUNT(*) FROM ParkingSpots GROUP BY lot_id
+    """)
+    lot_spot_data = cursor.fetchall()
+
+    conn.close()
+
+    return render_template("admin/adminSummary.html",
+                           total_lots = total_lots,
+                           total_spots = total_spots,
+                           status_summary = status_summary,
+                           lot_spot_data = lot_spot_data)
+
+
 
     
 
