@@ -84,6 +84,7 @@ def editSpot():
             return jsonify({"status": "error", "message": "Please enter all the details"}), 400
         else:
             updateParkinglot(locationName, address, pincode, pricePerHour, maxSpots,lot_id)
+            
             return jsonify({"status": "success", "message": "Parking lot updated successfully"}), 200
             
     lot_id = request.args.get('lot_id', type=int)
