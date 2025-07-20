@@ -1,8 +1,8 @@
 from flask import Blueprint, render_template, request, redirect, url_for, flash, session,jsonify
 from models.users import create_user_table, register_user, check_user, fetch_user
-from models.parking_lot import insertVehicleDetails, checkVehicleExists,get_availability_data, fetchOneParkingSpot, fetchVehicleUsers, insertReserveParkingSpot, updateParkingSpotStatus, getReserveParkingSpotData
+from models.parking_lot import insertVehicleDetails, checkVehicleExists,get_availability_data, fetchOneParkingSpot, fetchVehicleUsers, insertReserveParkingSpot, updateParkingSpotStatus, getReserveParkingSpotData,getPriceParkingLot
 import bcrypt
-
+import datetime
 
 user = Blueprint('user',__name__)
 
@@ -85,6 +85,7 @@ def confirmBooking():
         spot_id = data.get('spot_id')
         vehicle_number = data.get('vehicle_number')
         status = 'O'
+        user_id = session['user_id']
 
         if not locationName or not user_id or not lot_id or not spot_id or not vehicle_number:
             flash("Something went wrong","error")
@@ -99,4 +100,52 @@ def confirmBooking():
             "message": "Booking Successfull"
         }),200
 
-    
+@user.route("/user/ReleaseSpot" , methods=['GET','POST'])
+def ReleaseSpot():
+
+    if request.method == 'POST':
+        spot_id = request.form.get('spot_id')
+        vehicle_number = request.form.get('vehicle_number')
+        lot_id = request.form.get('lot_id')
+        parking_time = request.form.get('parking_time')
+        release_time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M")
+        price = getPriceParkingLot(lot_id)
+        
+
+        if not spot_id or not vehicle_number or not lot_id or not parking_time or not price:
+            flash("Something went wrong","error")
+            return redirect(url_for('user.dashboard'))
+        
+        # Convert parking_time and release_time strings to datetime objects
+        parking_dt = datetime.datetime.strptime(parking_time, "%Y-%m-%d %H:%M")
+        release_dt = datetime.datetime.strptime(release_time, "%Y-%m-%d %H:%M")
+        hour_difference = (release_dt - parking_dt).total_seconds() // 3600  # Only hour difference
+
+        print(hour_difference )
+        total_cost = price + hour_difference * price
+
+
+        return render_template("user/release_spot.html", 
+                              spot_id=spot_id, 
+                              vehicle_number=vehicle_number, 
+                              lot_id=lot_id, 
+                              parking_time=parking_time, 
+                              release_time=release_time, 
+                              total_cost=total_cost)
+
+@user.route("/user/confirmSpotRelease", methods = ['GET','POST'])  
+def confirmSpotRelease():
+
+    if request.method == 'POST':
+        spot_id = request.form.get("spot_id")
+        lot_id = request.form.get("lot_id")
+
+        if not lot_id and not spot_id:
+            flash("Something went wrong","error")
+            return redirect(url_for('user.dashboard'))
+
+        updateParkingSpotStatus(spot_id, lot_id, 'A')
+        return redirect(url_for('user.dashboard'))
+
+
+

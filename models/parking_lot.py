@@ -419,7 +419,8 @@ def getReserveParkingSpotData(user_id):
                         pl.address AS location_name,
                         rp.vehicle_number,
                         rp.parking_timestamp,
-                        ps.status
+                        ps.status,
+                        pl.lot_id
                         from Reserve_Parking_Spot rp 
                     JOIN
                         ParkingLot pl on pl.lot_id = rp.lot_id 
@@ -437,5 +438,18 @@ def getReserveParkingSpotData(user_id):
 
     return result
 
+def getPriceParkingLot(lot_id):
 
+    connection = sqlite3.connect(DATABASE_PARKING)
+    cur = connection.cursor()
 
+    cur.execute('''
+                    Select price from parkinglot where lot_id=(?)
+                ''',(lot_id,))
+    
+    price = cur.fetchone()[0]
+
+    connection.commit()
+    connection.close()
+
+    return price

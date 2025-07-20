@@ -1,0 +1,40 @@
+{% extends "navbar.html" %}
+
+{% block content %}
+
+    <div class="title"> Release Parking Spot </div>
+
+    <div class="form-container">
+<form method="POST" action="{{ url_for('user.confirmSpotRelease') }}">
+
+    <div class="mb-3">
+        <label for="name" class="form-label">Spot Id</label>
+        <input type="number" class="form-control" id="spot_id" name="spot_id" value="{{ spot_id }}" readonly>
+    </div>
+    <div class="mb-3">
+        <label for="email" class="form-label">Vehicle Number</label>
+        <input type="text" class="form-control" id="vehicle_number" name="vehicle_number" value="{{ vehicle_number }}" readonly>
+    </div>
+    <div class="mb-3">
+        <label for="parkingTime" class="form-label">Parking Time</label>
+        <input type="datetime" class="form-control" id="parking_time" name="parking_time" value="{{ parking_time }}" readonly>
+    </div>
+    <div class="mb-3">
+        <label for="releaseTime" class="form-label">Release Time</label>
+        <input type="datetime" class="form-control" id="release_time" name="release_time" value="{{ release_time }}" readonly>
+    </div>
+    <div class="mb-3">
+        <label for="totalCost" class="form-label">Total Cost</label>
+        <input type="number" class="form-control" id="total_cost" name="total_cost" value="{{ total_cost }}" readonly>
+    </div>
+    <input type="hidden" id="lot_id" name="lot_id" value="{{ lot_id }}"/>
+
+    <div class="d-grid">
+        <button type="submit" class="btn btn-success">Release Spot</button>
+        <br>
+        <button type="button" class="btn btn-danger" onclick="window.location.href='user/dashboard'">Cancel</button>
+    </div>
+</form>
+</div>
+
+{% endblock %}

@@ -107,3 +107,18 @@ body {
     justify-content: center;        /* center horizontally */
     align-items: center;            /* center vertically */
 }
+
+.form-container {
+      max-width: 450px;
+      margin: 60px auto;
+      padding: 30px;
+      background: #fff;
+      border-radius: 15px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+    }
+.form-title {
+    text-align: center;
+    margin-bottom: 20px;
+    font-weight: 600;
+    color: #333;
+}
