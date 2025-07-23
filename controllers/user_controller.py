@@ -1,6 +1,6 @@
 from flask import Blueprint, render_template, request, redirect, url_for, flash, session,jsonify
 from models.users import create_user_table, register_user, check_user, fetch_user
-from models.parking_lot import insertVehicleDetails, checkVehicleExists,get_availability_data, fetchOneParkingSpot, fetchVehicleUsers, insertReserveParkingSpot, updateParkingSpotStatus, getReserveParkingSpotData,getPriceParkingLot
+from models.parking_lot import insertVehicleDetails, checkVehicleExists,get_availability_data, fetchOneParkingSpot, fetchVehicleUsers, insertReserveParkingSpot, updateParkingSpotStatus, getReserveParkingSpotData,getPriceParkingLot, updateVehicleStatus, deleteReserveParkingSpot
 import bcrypt
 import datetime
 
@@ -29,7 +29,7 @@ def bookSpot():
         location_name = request.form.get('locationName')
         spot_id = fetchOneParkingSpot(lot_id)
         user_id = session['user_id']
-        vehicles_user = fetchVehicleUsers(user_id)
+        vehicles_user = fetchVehicleUsers(user_id, 'F')
 
         #used for processing vehicles list
         print(vehicles_user)
@@ -67,7 +67,7 @@ def addVehicle():
         if (checkVehicleExists(vehicle_number)):
             return jsonify({"status": "error", "message": "Vehicle Number Already Exists"})
         
-        insertVehicleDetails(user_id, vehicle_number)
+        insertVehicleDetails(user_id, vehicle_number,'F')
         return jsonify({"status": "success", "message": "Vehicle added successfully!"})
 
     #GET Request
@@ -92,8 +92,10 @@ def confirmBooking():
             return redirect(url_for('user.dashboard'))
 
         else:
+            deleteReserveParkingSpot(user_id, vehicle_number)
             insertReserveParkingSpot(spot_id, lot_id, user_id, vehicle_number)
             updateParkingSpotStatus(spot_id,lot_id,status)
+            updateVehicleStatus(user_id, vehicle_number, 'P')
         
         return jsonify({
             "status": "success",
@@ -139,12 +141,17 @@ def confirmSpotRelease():
     if request.method == 'POST':
         spot_id = request.form.get("spot_id")
         lot_id = request.form.get("lot_id")
+        user_id = session['user_id']
+        vehicle_number = request.form.get("vehicle_number")
+
 
         if not lot_id and not spot_id:
             flash("Something went wrong","error")
             return redirect(url_for('user.dashboard'))
 
         updateParkingSpotStatus(spot_id, lot_id, 'A')
+        updateVehicleStatus(user_id, vehicle_number,'F')
+
         return redirect(url_for('user.dashboard'))
 
 

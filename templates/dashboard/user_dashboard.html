@@ -25,7 +25,7 @@
                                 <td>
                                     <form method="post" action="{{ url_for ('user.ReleaseSpot') }}">
                                         <input type="hidden" name="spot_id" value="{{ parking[0] }}"/>
-                                        <input type="hidden" name="vehicle_number" value="{{ parking[1]}}"/>
+                                        <input type="hidden" name="vehicle_number" value="{{ parking[2]}}"/>
                                         <input type="hidden" name="lot_id" value="{{ parking[5] }}"/>
                                         <input type="hidden" name="parking_time" value="{{ parking[3] }}"/>
                                         <button type="submit" class="btn btn-danger"><b> Release Out </b></button></td>

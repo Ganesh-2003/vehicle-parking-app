@@ -92,7 +92,7 @@ def  createVehiclesTable():
             CREATE TABLE IF NOT EXISTS Vehicles (
                 user_id INTEGER NOT NULL,
                 vehicle_number TEXT NOT NULL UNIQUE,
-    
+                vehicle_status TEXT NOT NULL,
                 FOREIGN KEY (user_id) REFERENCES Users(user_id)
             );
         '''
@@ -273,15 +273,15 @@ def getUsersData():
 
     return users_data
 
-def insertVehicleDetails(user_id, vehicle_number):
+def insertVehicleDetails(user_id, vehicle_number, vehicle_status):
 
     connection = sqlite3.connect(DATABASE_PARKING)
     cur = connection.cursor()
 
     cur.execute(
         '''
-            INSERT INTO Vehicles (user_id, vehicle_number) VALUES (?,?)
-        ''',(user_id,vehicle_number,)
+            INSERT INTO Vehicles (user_id, vehicle_number, vehicle_status) VALUES (?,?,?)
+        ''',(user_id,vehicle_number,vehicle_status,)
     )
 
     connection.commit()
@@ -352,15 +352,15 @@ def fetchOneParkingSpot(lot_id):
 
     return spot_id
 
-def fetchVehicleUsers(user_id):
+def fetchVehicleUsers(user_id, vehicle_status):
     
     connection = sqlite3.connect(DATABASE_PARKING)
     cur = connection.cursor()
 
     cur.execute(
                 '''
-                    select vehicle_number from vehicles where user_id = (?)
-                ''',(user_id,)
+                    select vehicle_number from vehicles where user_id = (?) AND vehicle_status=(?)
+                ''',(user_id,vehicle_status)
     )
 
     vehicles = cur.fetchall()
@@ -425,7 +425,7 @@ def getReserveParkingSpotData(user_id):
                     JOIN
                         ParkingLot pl on pl.lot_id = rp.lot_id 
                     JOIN 
-                        ParkingSpots ps on rp.spot_id = ps.spot_id AND rp.lot_id = ps.lot_id
+                        ParkingSpots ps on rp.spot_id = ps.spot_id AND rp.lot_id = ps.lot_id AND ps.status = 'O'
                     where 
                         rp.user_id = (?)
                 ''',(user_id,)
@@ -453,3 +453,39 @@ def getPriceParkingLot(lot_id):
     connection.close()
 
     return price
+
+def updateVehicleStatus(user_id, vehicle_number, vehicle_status):
+
+    connection = sqlite3.connect(DATABASE_PARKING)
+    cur = connection.cursor()
+
+    cur.execute('''
+        UPDATE Vehicles
+        SET user_id = ?,
+            vehicle_number = ?,
+            vehicle_status = ?
+        WHERE vehicle_number = ?;
+    ''', (user_id, vehicle_number, vehicle_status, vehicle_number))
+
+    # Check if any row was updated
+    if cur.rowcount == 0:
+        print(f"No vehicle found with vehicle_number: {vehicle_number}")
+    else:
+        print(f"Vehicle {vehicle_number} updated successfully.")
+    
+    connection.commit()
+    connection.close()
+
+def deleteReserveParkingSpot(user_id, vehicle_number):
+
+    connection = sqlite3.connect(DATABASE_PARKING)
+    cur = connection.cursor()
+
+    cur.execute('''
+                    DELETE FROM Reserve_Parking_Spot
+                    WHERE vehicle_number = ?
+                    AND user_id = ?;
+                ''',(user_id, vehicle_number))
+    
+    connection.commit()
+    connection.close()
