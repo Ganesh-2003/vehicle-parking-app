@@ -425,7 +425,7 @@ def getReserveParkingSpotData(user_id):
                     JOIN
                         ParkingLot pl on pl.lot_id = rp.lot_id 
                     JOIN 
-                        ParkingSpots ps on rp.spot_id = ps.spot_id AND rp.lot_id = ps.lot_id AND ps.status = 'O'
+                        ParkingSpots ps on rp.spot_id = ps.spot_id AND rp.lot_id = ps.lot_id
                     where 
                         rp.user_id = (?)
                 ''',(user_id,)
@@ -485,7 +485,7 @@ def deleteReserveParkingSpot(user_id, vehicle_number):
                     DELETE FROM Reserve_Parking_Spot
                     WHERE vehicle_number = ?
                     AND user_id = ?;
-                ''',(user_id, vehicle_number))
+                ''',(vehicle_number, user_id))
     
     connection.commit()
     connection.close()

@@ -1,10 +1,16 @@
 from flask import Blueprint, render_template, request, redirect, url_for, flash, session,jsonify
 from models.users import create_user_table, register_user, check_user, fetch_user
 from models.parking_lot import insertVehicleDetails, checkVehicleExists,get_availability_data, fetchOneParkingSpot, fetchVehicleUsers, insertReserveParkingSpot, updateParkingSpotStatus, getReserveParkingSpotData,getPriceParkingLot, updateVehicleStatus, deleteReserveParkingSpot
+from flask_restx import Namespace, Resource
 import bcrypt
 import datetime
 
 user = Blueprint('user',__name__)
+
+
+
+auth_ns = Namespace('auth', description='Authentication API')
+
 
 @user.route("/user/dashboard",methods = ['GET','POST'])
 def dashboard():
@@ -84,6 +90,7 @@ def confirmBooking():
         lot_id = data.get('lot_id')
         spot_id = data.get('spot_id')
         vehicle_number = data.get('vehicle_number')
+        vehicle_number = vehicle_number.upper()
         status = 'O'
         user_id = session['user_id']
 

@@ -1,0 +1,69 @@
+project:
+  name: vehicle-parking-app
+  description: Vehicle Parking System for IITM online degree course
+  language: Python
+  framework: Flask
+  entry_point: app.py
+  env_file: .env
+
+structure:
+  app.py: Main Flask application entry point
+  config.py: Configuration file for database paths and environment
+  requirements.txt: Python dependencies
+  controllers/:
+    - admin_controller.py
+    - auth_controller.py
+    - user_controller.py
+  models/:
+    - parking_lot.py
+    - users.py
+  database/:
+    - parking.db
+  Sql_Queries/:
+    - get_availabilty_data.sql
+  static/:
+    css/: Static CSS files
+  templates/:
+    layout.html: Base layout
+    login.html: Login page
+    register.html: Registration page
+    navbar.html: Navigation bar
+    admin/:
+      - adminSummary.html
+      - addlot.html
+      - confirm_delete.html
+      - editParkinglot.html
+      - userslist.html
+      - viewSpot.html
+      - admin_dashboard.html
+    dashboard/:
+      - user_dashboard.html
+    user/:
+      - add_vehicle.html
+      - book_Spot.html
+      - release_spot.html
+
+dependencies:
+  python:
+    - flask
+    - flask_sqlalchemy
+    - bcrypt
+    - python-dotenv
+    - sqlite3
+    - (see requirements.txt for full list)
+
+environment:
+  variables:
+    - SECRET_KEY (from .env)
+    - DATABASE_USER (from config.py)
+    - DATABASE_PARKING (from config.py)
+
+run:
+  - python app.py
+
+notes:
+  - To install dependencies: pip install -r requirements.txt
+  - To run the app: python app.py
+  - The app uses Flask blueprints for modular routing.
+  - Database is SQLite, initialized on first run.
+  - Static files and templates follow Flask conventions.

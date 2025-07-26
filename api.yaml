@@ -1,0 +1,390 @@
+openapi: 3.0.0
+info:
+  title: Vehicle Parking App API
+  version: 1.0.0
+  description: API documentation for authentication, admin, and user operations in the Vehicle Parking App
+
+tags:
+  - name: Auth
+    description: User authentication and registration
+  - name: Admin
+    description: Admin operations for parking lots and users
+  - name: User
+    description: User operations for booking and managing parking spots
+
+paths:
+  /:
+    get:
+      tags: [Auth]
+      summary: Redirect to login
+      responses:
+        302:
+          description: Redirects to /login
+
+  /register:
+    get:
+      tags: [Auth]
+      summary: Render registration page
+      responses:
+        200:
+          description: Registration HTML page
+    post:
+      tags: [Auth]
+      summary: Register a new user
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                email: { type: string }
+                password: { type: string }
+                fullname: { type: string }
+                address: { type: string }
+                pincode: { type: string }
+              required: [email, password, fullname, address, pincode]
+      responses:
+        302:
+          description: Redirects to login on success
+        200:
+          description: Registration HTML page with error
+
+  /login:
+    get:
+      tags: [Auth]
+      summary: Render login page
+      responses:
+        200:
+          description: Login HTML page
+    post:
+      tags: [Auth]
+      summary: Login user
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                email: { type: string }
+                password: { type: string }
+              required: [email, password]
+      responses:
+        302:
+          description: Redirects to dashboard on success
+        200:
+          description: Login HTML page with error
+
+  /admin/dashboard:
+    get:
+      tags: [Admin]
+      summary: Get admin dashboard
+      responses:
+        200:
+          description: Admin dashboard HTML page
+    post:
+      tags: [Admin]
+      summary: Post admin dashboard (not typically used)
+      responses:
+        200:
+          description: Admin dashboard HTML page
+
+  /admin/addlot:
+    get:
+      tags: [Admin]
+      summary: Render add parking lot page
+      responses:
+        200:
+          description: Add lot HTML page
+    post:
+      tags: [Admin]
+      summary: Add a new parking lot
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                locationName: { type: string }
+                address: { type: string }
+                pincode: { type: string }
+                pricePerHour: { type: string }
+                maxSpots: { type: integer }
+              required: [locationName, address, pincode, pricePerHour, maxSpots]
+      responses:
+        200:
+          description: Parking Lot added successfully (JSON)
+        302:
+          description: Redirect on error
+
+  /admin/edit:
+    get:
+      tags: [Admin]
+      summary: Render edit parking lot page
+      parameters:
+        - in: query
+          name: lot_id
+          schema: { type: integer }
+          required: true
+      responses:
+        200:
+          description: Edit parking lot HTML page
+    post:
+      tags: [Admin]
+      summary: Edit parking lot details
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                locationName: { type: string }
+                address: { type: string }
+                pincode: { type: string }
+                pricePerHour: { type: string }
+                maxSpots: { type: integer }
+                lot_id: { type: integer }
+              required: [locationName, address, pincode, pricePerHour, maxSpots, lot_id]
+      responses:
+        200:
+          description: Parking lot updated successfully (JSON)
+        400:
+          description: Missing required fields
+
+  /admin/delete:
+    get:
+      tags: [Admin]
+      summary: Render confirm delete parking lot page
+      parameters:
+        - in: query
+          name: lot_id
+          schema: { type: integer }
+          required: true
+      responses:
+        200:
+          description: Confirm delete HTML page
+    post:
+      tags: [Admin]
+      summary: Delete a parking lot and its spots
+      parameters:
+        - in: query
+          name: lot_id
+          schema: { type: integer }
+          required: true
+      responses:
+        302:
+          description: Redirect to dashboard after deletion
+
+  /admin/viewSpot:
+    get:
+      tags: [Admin]
+      summary: Render view spot page
+      parameters:
+        - in: query
+          name: spot_id
+          schema: { type: integer }
+          required: true
+        - in: query
+          name: lot_id
+          schema: { type: integer }
+          required: true
+        - in: query
+          name: status
+          schema: { type: string }
+          required: true
+      responses:
+        200:
+          description: View spot HTML page
+    post:
+      tags: [Admin]
+      summary: Delete a particular parking spot
+      parameters:
+        - in: query
+          name: spot_id
+          schema: { type: integer }
+          required: true
+        - in: query
+          name: lot_id
+          schema: { type: integer }
+          required: true
+        - in: query
+          name: status
+          schema: { type: string }
+          required: true
+      responses:
+        302:
+          description: Redirect to dashboard after deletion
+
+  /admin/users:
+    get:
+      tags: [Admin]
+      summary: View all users
+      responses:
+        200:
+          description: Users list HTML page
+    post:
+      tags: [Admin]
+      summary: View all users (POST)
+      responses:
+        200:
+          description: Users list HTML page
+
+  /admin/summary:
+    get:
+      tags: [Admin]
+      summary: View admin summary
+      responses:
+        200:
+          description: Admin summary HTML page
+    post:
+      tags: [Admin]
+      summary: View admin summary (POST)
+      responses:
+        200:
+          description: Admin summary HTML page
+
+  /user/dashboard:
+    get:
+      tags: [User]
+      summary: User dashboard
+      responses:
+        200:
+          description: User dashboard HTML page
+    post:
+      tags: [User]
+      summary: User dashboard (POST)
+      responses:
+        200:
+          description: User dashboard HTML page
+
+  /user/bookSpot:
+    get:
+      tags: [User]
+      summary: Render book spot page
+      responses:
+        200:
+          description: Book spot HTML page
+    post:
+      tags: [User]
+      summary: Book a parking spot
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                lot_id: { type: integer }
+                locationName: { type: string }
+              required: [lot_id, locationName]
+      responses:
+        200:
+          description: Book spot HTML page or redirect
+
+  /user/addVehicle:
+    get:
+      tags: [User]
+      summary: Render add vehicle page
+      responses:
+        200:
+          description: Add vehicle HTML page
+    post:
+      tags: [User]
+      summary: Add a vehicle for the user
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                vehicle_number: { type: string }
+              required: [vehicle_number]
+      responses:
+        200:
+          description: Vehicle added successfully (JSON)
+        400:
+          description: Error adding vehicle (JSON)
+
+  /user/confirmBooking:
+    get:
+      tags: [User]
+      summary: Render confirm booking page
+      responses:
+        200:
+          description: Confirm booking HTML page
+    post:
+      tags: [User]
+      summary: Confirm booking of a parking spot
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                locationName: { type: string }
+                user_id: { type: integer }
+                lot_id: { type: integer }
+                spot_id: { type: integer }
+                vehicle_number: { type: string }
+              required: [locationName, user_id, lot_id, spot_id, vehicle_number]
+      responses:
+        200:
+          description: Booking successful (JSON)
+        302:
+          description: Redirect on error
+
+  /user/ReleaseSpot:
+    get:
+      tags: [User]
+      summary: Render release spot page
+      responses:
+        200:
+          description: Release spot HTML page
+    post:
+      tags: [User]
+      summary: Release a booked parking spot
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                spot_id: { type: integer }
+                vehicle_number: { type: string }
+                lot_id: { type: integer }
+                parking_time: { type: string }
+              required: [spot_id, vehicle_number, lot_id, parking_time]
+      responses:
+        200:
+          description: Release spot HTML page or redirect
+
+  /user/confirmSpotRelease:
+    get:
+      tags: [User]
+      summary: Render confirm spot release page
+      responses:
+        200:
+          description: Confirm spot release HTML page
+    post:
+      tags: [User]
+      summary: Confirm release of a parking spot
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                spot_id: { type: integer }
+                lot_id: { type: integer }
+                vehicle_number: { type: string }
+              required: [spot_id, lot_id, vehicle_number]
+      responses:
+        302:
+          description: Redirect to dashboard after release
