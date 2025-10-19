@@ -8,7 +8,6 @@ import datetime
 user = Blueprint('user',__name__)
 
 
-
 auth_ns = Namespace('auth', description='Authentication API')
 
 
