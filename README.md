@@ -1,5 +1,7 @@
 # Vehicle Parking App
 
+Deployment URL: https://parkmate-vehicle-parking-app-production.up.railway.app/login
+
 A Flask-based vehicle parking management system that allows users to book parking spots and admins to manage parking lots. Features include user registration, vehicle management, spot booking/release, and administrative controls.
 
 ## Technologies Used
