@@ -1,1 +1,1 @@
-admin
+run-reminder-now

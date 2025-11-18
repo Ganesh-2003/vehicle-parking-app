@@ -20,6 +20,7 @@ def register():
         fullname = request.form['fullname']
         address = request.form['address']
         pincode = request.form['pincode']
+        phone_no = request.form['phone_no']
 
         #Checking Mail ID
         if check_user(email):
@@ -30,8 +31,8 @@ def register():
         hashed_password = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
         print(hashed_password)
 
-        if (email and hashed_password and fullname and address and pincode):
-            register_user(email, hashed_password, fullname, address, pincode)
+        if (email and hashed_password and fullname and address and pincode, phone_no):
+            register_user(email, hashed_password, fullname, address, pincode, phone_no)
             flash('Registration successful!', 'success')
             return redirect(url_for('auth.login'))
         else:

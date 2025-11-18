@@ -15,6 +15,7 @@ def create_user_table():
             name Text NOT NULL,
             address Text NOT NULL,
             pincode Text NOT NULL,
+            phone_no Text NOT NULL,
             role Text DEFAULT 'user'
         )
         '''
@@ -25,8 +26,8 @@ def create_user_table():
         hashed_password = bcrypt.hashpw("admin@123".encode('utf-8'), bcrypt.gensalt())
         cur.execute(
             '''
-                INSERT INTO USERS (email, password, name, address, pincode, role) VALUES (?,?,?,?,?,?) 
-            ''',('admin@parking.com', hashed_password, 'Admin', 'Chennai', '123456', 'admin')
+                INSERT INTO USERS (email, password, name, address, pincode, phone_no,role) VALUES (?,?,?,?,?,?,?) 
+            ''',('admin@parking.com', hashed_password, 'Admin','Chennai', '123456', '1234567890','admin')
         )
 
         print("Admin Created with Email - admin@parking.com and PASSWORD - admin@123")
@@ -54,15 +55,14 @@ def check_user(email):
         return False
 
     
-def register_user(email, hashedpassword, fullname, address, pincode):
-
+def register_user(email, hashedpassword, fullname, address, pincode,phone_no):
 
     connection = sqlite3.connect(DATABASE_PARKING)
     cur = connection.cursor()
     res = cur.execute(
         '''
-            INSERT INTO users (email, password, name, address, pincode) VALUES (?,?,?,?,?)
-        ''',(email, hashedpassword, fullname, address, pincode)
+            INSERT INTO users (email, password, name, address, phone_no,pincode) VALUES (?,?,?,?,?,?)
+        ''',(email, hashedpassword, fullname, address, phone_no,pincode)
     )
 
     connection.commit()
