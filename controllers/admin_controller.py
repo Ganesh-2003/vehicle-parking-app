@@ -24,19 +24,50 @@ def admin_dashboard_api():
     
     for lot in lots:
         # Assuming lot is a tuple and the first element is the id
-        lot_id = lot[0]
-        spots = get_all_parking_spots(lot_id)
-        total = len(spots)   
-        occupied = getOccupiedValue(spots)
-        available = total - occupied
+        # lot_id = lot[0]
+        # spots = get_all_parking_spots(lot_id)
+        # total = len(spots)   
+        # occupied = getOccupiedValue(spots)
+        # available = total - occupied
 
-        all_parking_lots.append({
-            "lot": lot,
-            "spots": spots,
-            "total": total,
-            "occupied": occupied,
-            "available": available,
-        })
+        # all_parking_lots.append({
+        #     "lot": lot,
+        #     "spots": spots,
+        #     "total": total,
+        #     "occupied": occupied,
+        #     "available": available,
+        # })
+
+        lot_id = lot[0]
+
+        spots = get_all_parking_spots(lot_id)  # list of tuples
+
+        # Convert spots tuples → objects
+        spots_clean = [
+            {
+                "spot_id": s[1],
+                "lot_id": s[0],
+                "status": s[2]
+            }
+            for s in spots
+        ]
+
+        # Create clean lot object
+        lot_clean = {
+            "lot_id": lot[0],
+            "location_name": lot[1],
+            "address": lot[2],
+            "pincode": lot[3],
+            "price": lot[4],
+            "maxSpots": lot[5],
+            "total": len(spots),
+            "occupied": getOccupiedValue(spots),
+            "available": len(spots) - getOccupiedValue(spots),
+            "spots": spots_clean
+        }
+
+        all_parking_lots.append(lot_clean)
+
 
     print(all_parking_lots)
 
@@ -45,7 +76,7 @@ def admin_dashboard_api():
     return jsonify({
         "success": True,
         "lots": all_parking_lots
-    },200)
+    })
 
 @admin.route('/admin/addlot', methods = ['GET','POST'])
 def addlot():

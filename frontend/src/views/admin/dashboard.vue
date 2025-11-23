@@ -14,15 +14,15 @@
     <div class="d-flex flex-wrap justify-content-evenly">
       <div 
         v-for="lot in lots" 
-        :key="lot.lot[0]" 
+        :key="lot.lot_id" 
         class="parking_lot"
       >
-        <h3>Parking #{{ lot.lot[0] }}</h3>
-        <h6>{{ lot.lot[2] }}</h6>
+        <h3>Parking #{{ lot.lot_id }}</h3>
+        <h6>{{ lot.location_name }}</h6>
 
         <div>
-          <RouterLink :to="`/admin/edit-lot/${lot.lot[0]}`">Edit</RouterLink> |
-          <RouterLink :to="`/admin/delete-lot/${lot.lot[0]}`">Delete</RouterLink>
+          <RouterLink :to="`/admin/edit-lot/${lot.lot_id}`">Edit</RouterLink> |
+          <RouterLink :to="`/admin/delete-lot/${lot.lot_id}`">Delete</RouterLink>
         </div>
 
         <p style="color: green;">
@@ -32,11 +32,11 @@
         <div class="spot">
           <div
             v-for="spot in lot.spots"
-            :key="spot[1]"
-            :class="spot[2] === 'O' ? 'occupied' : 'available'"
-            @click="goToSpot(lot.lot[0], spot)"
+            :key="spot.spot_id"
+            :class="spot.status === 'O' ? 'occupied' : 'available'"
+            @click="goToSpot(lot.lot_id, spot)"
           >
-            {{ spot[2] }}
+            {{ spot.status }}
           </div>
         </div>
 
@@ -66,6 +66,7 @@ export default {
     async loadLots() {
       try {
         const res = await axios.get("http://localhost:5000/api/admin/dashboard");
+        console.log(res.data)
         if (res.data.success) {
           this.lots = res.data.lots;
         }
