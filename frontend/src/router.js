@@ -18,6 +18,11 @@ const routes = [
     path: '/register',
     name: 'Register',
     component: () => import('./views/Register.vue')
+  },
+
+  {
+    path: "/admin/dashboard",
+    component: () => import("./views/admin/dashboard.vue")
   }
 ];
 

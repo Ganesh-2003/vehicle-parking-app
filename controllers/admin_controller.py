@@ -5,8 +5,8 @@ from models.parking_lot import insertParkingLot,createParkingSpots, insertParkin
 
 admin = Blueprint('admin',__name__)
 
-@admin.route("/admin/dashboard", methods = ['GET','POST'])
-def dashboard():
+@admin.route("/api/admin/dashboard", methods = ['GET','POST'])
+def admin_dashboard_api():
 
     #Querying and filling parking lots in home page
     def getOccupiedValue(spots):
@@ -40,7 +40,12 @@ def dashboard():
 
     print(all_parking_lots)
 
-    return render_template("dashboard/admin_dashboard.html", lots_data = all_parking_lots)
+    #return render_template("dashboard/admin_dashboard.html", lots_data = all_parking_lots)
+
+    return jsonify({
+        "success": True,
+        "lots": all_parking_lots
+    },200)
 
 @admin.route('/admin/addlot', methods = ['GET','POST'])
 def addlot():
