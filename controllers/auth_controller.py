@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, request, redirect, url_for, flash, session
+from flask import Blueprint, render_template, request, redirect, url_for, flash, session,jsonify
 from models.users import create_user_table, register_user, check_user, fetch_user
 from controllers.admin_controller import dashboard
 import bcrypt
@@ -41,32 +41,62 @@ def register():
     return render_template("register.html")
 
 
-@auth.route('/login', methods=['GET','POST'])
-def login():
+# @auth.route('/login', methods=['GET','POST'])
+# def login():
 
-    if request.method == 'POST':
-        email = request.form['email']
-        password = request.form['password']
+#     if request.method == 'POST':
+#         email = request.form['email']
+#         password = request.form['password']
 
-        user = fetch_user(email,password)
-        print(user)
+#         user = fetch_user(email,password)
+#         print(user)
 
-        if(not user):
-            flash('Please Enter Correct Credentials')
-            return render_template("login.html")
-        else:
-            session['user_id'] = user[0]
-            session['user'] = email
-            session['role'] = user[len(user)-1]
-            session['name'] = user[3]
-            if session['role'] == 'admin':
-                return redirect(url_for('admin.dashboard'))
-                #return redirect(url_for('auth.admin_dashboard'))
-            if session['role'] == 'user':
-                return redirect(url_for('user.dashboard'))
+#         if(not user):
+#             flash('Please Enter Correct Credentials')
+#             return render_template("login.html")
+#         else:
+#             session['user_id'] = user[0]
+#             session['user'] = email
+#             session['role'] = user[len(user)-1]
+#             session['name'] = user[3]
+#             if session['role'] == 'admin':
+#                 return redirect(url_for('admin.dashboard'))
+#                 #return redirect(url_for('auth.admin_dashboard'))
+#             if session['role'] == 'user':
+#                 return redirect(url_for('user.dashboard'))
 
                     
-    return render_template("login.html")
+#     return render_template("login.html")
+
+@auth.route('/login', methods=['GET','POST'])
+#@cross_origin(supports_credentials=True)
+def login():
+
+    if request.method == 'GET':
+        return jsonify({"message": "Login API is working"}), 200
+
+    data = request.get_json()  # Vue sends JSON
+    email = data.get("email")
+    password = data.get("password")
+
+    user = fetch_user(email, password)
+
+    if not user:
+        return jsonify({"success": False, "message": "Invalid credentials"}), 401
+
+    # set session values
+    session['user_id'] = user[0]
+    session['user'] = email
+    session['role'] = user[-1]
+    session['name'] = user[3]
+
+    return jsonify({
+        "success": True,
+        "message": "Login successful",
+        "role": session['role'],
+        "name": session['name'],
+        "user_id": session['user_id']
+    }), 200
 
  
 

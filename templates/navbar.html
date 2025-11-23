@@ -60,6 +60,11 @@
   style= "justify-content: right; font-weight: bold;"
   class="collapse navbar-collapse" id="navbarSupportedContent">
     <ul class="navbar-nav mr-auto">
+      <li>
+        <form action="/export-parking-history" method="POST">
+          <button class="btn btn-primary">Export Parking History</button>
+        </form>
+      </li>
       <li class="nav-item active">
         <a class="nav-link" href="{{ url_for('user.addVehicle') }}"> Add Vehicle </a>
       </li>
