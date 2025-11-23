@@ -7,10 +7,6 @@ auth = Blueprint('auth',__name__)
 
 create_user_table()
 
-@auth.route('/')
-def home():
-    return redirect(url_for('auth.login'))
-
 @auth.route('/register', methods=['GET','POST'])
 def register():
 
@@ -41,63 +37,36 @@ def register():
     return render_template("register.html")
 
 
-@auth.route('/login', methods=['GET','POST'])
-def login():
 
-    if request.method == 'POST':
-        email = request.form['email']
-        password = request.form['password']
+@auth.route('/api/login', methods=['POST'])
+def login_api():
 
-        user = fetch_user(email,password)
-        print(user)
+    data = request.get_json()
+    email = data.get('email')
+    password = data.get('password')
 
-        if(not user):
-            flash('Please Enter Correct Credentials')
-            return render_template("login.html")
-        else:
-            session['user_id'] = user[0]
-            session['user'] = email
-            session['role'] = user[len(user)-1]
-            session['name'] = user[3]
-            if session['role'] == 'admin':
-                return redirect(url_for('admin.dashboard'))
-                #return redirect(url_for('auth.admin_dashboard'))
-            if session['role'] == 'user':
-                return redirect(url_for('user.dashboard'))
+    user = fetch_user(email, password)
+    print("Fetched user:", user)
 
-                    
-    return render_template("login.html")
+    if not user:
+        return jsonify({
+            "success": False,
+            "message": "Invalid credentials"
+        }), 401
 
-# @auth.route('/login', methods=['GET','POST'])
-#@cross_origin(supports_credentials=True)
-# def login():
+    # Set session (optional if you want login persistence)
+    session['user_id'] = user[0]
+    session['user'] = email
+    session['role'] = user[-1]
+    session['name'] = user[3]
 
-#     if request.method == 'GET':
-#         return jsonify({"message": "Login API is working"}), 200
-
-#     data = request.get_json()  # Vue sends JSON
-#     email = data.get("email")
-#     password = data.get("password")
-
-#     user = fetch_user(email, password)
-
-#     if not user:
-#         return jsonify({"success": False, "message": "Invalid credentials"}), 401
-
-#     # set session values
-#     session['user_id'] = user[0]
-#     session['user'] = email
-#     session['role'] = user[-1]
-#     session['name'] = user[3]
-
-#     return jsonify({
-#         "success": True,
-#         "message": "Login successful",
-#         "role": session['role'],
-#         "name": session['name'],
-#         "user_id": session['user_id']
-#     }), 200
-
+    return jsonify({
+        "success": True,
+        "user_id": user[0],
+        "email": email,
+        "name": user[3],
+        "role": user[-1]
+    }), 200
  
 
 # @auth.route('/admin/dashboard',methods=['GET','POST'])
