@@ -1,4 +1,5 @@
 <template>
+ <div class="title">Vehicle Parking System</div>
   <div class="center-wrapper">
     <div class="form-container">
       <h2 class="form-title">Login</h2>
@@ -35,6 +36,7 @@
       </form>
     </div>
   </div>
+  
 </template>
 
 <script>
@@ -77,7 +79,7 @@ export default {
 
       } catch (error) {
         console.error(error);
-        alert("Login failed. Check API.");
+        alert("Login failed. There is an issue with API.");
       }
     }
   }

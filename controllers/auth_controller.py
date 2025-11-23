@@ -7,35 +7,40 @@ auth = Blueprint('auth',__name__)
 
 create_user_table()
 
-@auth.route('/register', methods=['GET','POST'])
-def register():
+@auth.route('/api/register', methods=['POST'])
+def register_api():
+    data = request.get_json()
 
-    if request.method == 'POST':
-        email = request.form['email']
-        password = request.form['password']
-        fullname = request.form['fullname']
-        address = request.form['address']
-        pincode = request.form['pincode']
-        phone_no = request.form['phone_no']
+    email = data.get("email")
+    password = data.get("password")
+    fullname = data.get("fullname")
+    address = data.get("address")
+    pincode = data.get("pincode")
+    phone_no = data.get("phone_no")
 
-        #Checking Mail ID
-        if check_user(email):
-            flash('Email ID already exists. Please use a different email.', 'error')
-            return render_template("register.html")
-        
-        # Password hashing
-        hashed_password = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
-        print(hashed_password)
+    # Validate email exists
+    if check_user(email):
+        return jsonify({
+            "success": False,
+            "message": "Email already exists"
+        }), 400
 
-        if (email and hashed_password and fullname and address and pincode, phone_no):
-            register_user(email, hashed_password, fullname, address, pincode, phone_no)
-            flash('Registration successful!', 'success')
-            return redirect(url_for('auth.login'))
-        else:
-            flash('Please enter all the details', 'error')
+    # Hash password
+    hashed_pw = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
 
-    return render_template("register.html")
+    # Validate fields
+    if not all([email, password, fullname, address, pincode, phone_no]):
+        return jsonify({
+            "success": False,
+            "message": "Please fill all fields"
+        }), 400
 
+    register_user(email, hashed_pw, fullname, address, pincode, phone_no)
+
+    return jsonify({
+        "success": True,
+        "message": "Registration successful"
+    }), 201
 
 
 @auth.route('/api/login', methods=['POST'])
